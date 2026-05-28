@@ -1,0 +1,60 @@
+---
+import frontSvgRaw from '../assets/muscle-diagrams/front.svg?raw';
+import backSvgRaw from '../assets/muscle-diagrams/back.svg?raw';
+import { getMuscleId } from '../services/muscle-map';
+import { defaultLanguage, type Language } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  primary: string[];
+  secondary: string[];
+  lang?: Language;
+}
+
+const { primary, secondary, lang = defaultLanguage } = Astro.props;
+const t = useTranslations(lang);
+
+let frontSvg = frontSvgRaw;
+let backSvg = backSvgRaw;
+
+// Build muscle-id → { className, muscleName } map; primary takes precedence over secondary
+const muscleData = new Map<string, { className: string; muscleName: string }>();
+for (const name of secondary) {
+  const id = getMuscleId(name);
+  if (id) muscleData.set(id, { className: 'muscle-secondary', muscleName: name });
+}
+for (const name of primary) {
+  const id = getMuscleId(name);
+  if (id) muscleData.set(id, { className: 'muscle-primary', muscleName: name });
+}
+
+// Inject CSS class + aria-label into each matching SVG element at build time.
+// SVG elements use data-muscle="<id>"; inserting class= after that attribute
+// overrides the presentational fill="#B6BDC3" attribute via CSS specificity.
+for (const [id, { className, muscleName }] of muscleData) {
+  const label = className === 'muscle-primary' ? `${muscleName} (primary)` : `${muscleName} (secondary)`;
+  const pattern = new RegExp(`(data-muscle="${id}")`, 'g');
+  const replacement = `$1 class="${className}" aria-label="${label}"`;
+  frontSvg = frontSvg.replace(pattern, replacement);
+  backSvg = backSvg.replace(pattern, replacement);
+}
+
+// Add ARIA role and label to SVG root elements
+frontSvg = frontSvg.replace('<svg ', `<svg role="img" aria-label="${t('frontMuscleDiagram')}" `);
+backSvg = backSvg.replace('<svg ', `<svg role="img" aria-label="${t('backMuscleDiagram')}" `);
+---
+
+<div class="flex gap-3">
+  <figure class="flex-1 flex flex-col items-center gap-1 min-w-0">
+    <figcaption class="text-xs text-gym-muted uppercase tracking-widest">
+      {t('front')}
+    </figcaption>
+    <div class="w-full" set:html={frontSvg} />
+  </figure>
+  <figure class="flex-1 flex flex-col items-center gap-1 min-w-0">
+    <figcaption class="text-xs text-gym-muted uppercase tracking-widest">
+      {t('back')}
+    </figcaption>
+    <div class="w-full" set:html={backSvg} />
+  </figure>
+</div>

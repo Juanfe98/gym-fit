@@ -1,0 +1,25 @@
+{
+  "name": "gym-planner",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run validate:routines && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "fetch:exercises": "node --env-file=.env --import=tsx/esm scripts/fetch-exercises.ts",
+    "validate:routines": "node --import=tsx/esm scripts/validate-routines.ts"
+  },
+  "dependencies": {
+    "@astrojs/vercel": "^10.0.7",
+    "@tailwindcss/vite": "^4.3.0",
+    "astro": "^6.3.8",
+    "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.3"
+  }
+}

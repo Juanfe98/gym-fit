@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+
+  --color-gym-bg: #0F172A;
+  --color-gym-surface: #1E293B;
+  --color-gym-border: #334155;
+  --color-gym-text: #F8FAFC;
+  --color-gym-muted: #94A3B8;
+
+  --color-goal-muscle: #F97316;
+  --color-goal-strength: #EF4444;
+  --color-goal-fatloss: #22C55E;
+  --color-goal-conditioning: #3B82F6;
+
+  --color-muscle-primary: #EF4444;
+  --color-muscle-secondary: #F97316;
+}
+
+html,
+body {
+  background-color: var(--color-gym-bg);
+  color: var(--color-gym-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  touch-action: manipulation;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.muscle-primary {
+  fill: var(--color-muscle-primary);
+}
+
+.muscle-secondary {
+  fill: var(--color-muscle-secondary);
+}

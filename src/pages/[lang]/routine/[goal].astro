@@ -1,0 +1,174 @@
+---
+import type { GetStaticPaths } from 'astro';
+import type { Goal } from '../../../types';
+import { ROUTINES } from '../../../data/routines/index';
+import RoutineDay from '../../../components/RoutineDay.astro';
+import { languages, type Language, localizePath } from '../../../i18n/config';
+import { useTranslations } from '../../../i18n/ui';
+import { getGoalDisplayName } from '../../../i18n/content';
+import { getRoutineRationale } from '../../../i18n/routine-content';
+import '../../../styles/global.css';
+
+export const getStaticPaths = (() => {
+  return languages.flatMap((lang) =>
+    (Object.keys(ROUTINES) as Goal[]).map((goal) => ({ params: { lang, goal } })),
+  );
+}) satisfies GetStaticPaths;
+
+const { goal } = Astro.params;
+const lang = Astro.params.lang as Language;
+const t = useTranslations(lang);
+const routine = ROUTINES[goal as Goal];
+const routineDisplayName = getGoalDisplayName(goal as Goal, lang);
+
+const accentColors: Record<Goal, string> = {
+  'muscle-gain': '#F97316',
+  strength:      '#EF4444',
+  'fat-loss':    '#22C55E',
+  conditioning:  '#3B82F6',
+};
+const accent = accentColors[goal as Goal];
+
+const dayCount      = routine.days.length;
+const exerciseCount = routine.days.reduce((acc, d) => acc + d.exercises.length, 0);
+
+const labels = {
+  days:       lang === 'es' ? 'Días'        : 'Days',
+  exercises:  lang === 'es' ? 'Ejercicios'  : 'Exercises',
+  schedule:   lang === 'es' ? `Plan de ${dayCount} días` : `${dayCount}-Day Schedule`,
+};
+---
+
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={`${routineDisplayName} ${t('weeklyRoutine').toLowerCase()}.`} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Barlow:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>{routineDisplayName} {t('routineTitleSuffix')}</title>
+  </head>
+
+  <body class="min-h-screen bg-gym-bg text-gym-text overflow-x-hidden">
+
+    <!-- ── HERO ─────────────────────────────────────────────── -->
+    <section class="relative">
+
+      <!-- Grid texture -->
+      <div
+        aria-hidden="true"
+        class="absolute inset-0 pointer-events-none"
+        style="
+          background-image:
+            linear-gradient(rgba(248,250,252,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(248,250,252,0.04) 1px, transparent 1px);
+          background-size: 44px 44px;
+        "
+      />
+
+      <!-- Goal accent glow -->
+      <div
+        aria-hidden="true"
+        class="absolute -top-16 -right-10 w-72 h-72 pointer-events-none rounded-full"
+        style={`background: radial-gradient(circle, ${accent}22 0%, transparent 65%);`}
+      />
+
+      <!-- Bottom fade -->
+      <div
+        aria-hidden="true"
+        class="absolute inset-x-0 bottom-0 h-24 pointer-events-none"
+        style="background: linear-gradient(to bottom, transparent, #0F172A);"
+      />
+
+      <div class="relative px-5 pt-6 pb-14">
+
+        <!-- Nav: back + lang switcher -->
+        <nav class="flex items-center justify-between mb-10" aria-label="Page navigation">
+          <a
+            href={localizePath(lang)}
+            class="inline-flex items-center gap-2 text-sm text-gym-muted active:text-gym-text transition-colors duration-200 min-h-[44px] cursor-pointer"
+            aria-label={t('backToGoalSelection')}
+          >
+            <svg viewBox="0 0 24 24" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+            <span>{t('allGoals')}</span>
+          </a>
+
+          <div class="inline-flex items-center gap-1 bg-gym-surface border border-gym-border rounded-lg p-1" aria-label="Language">
+            <a href={`/en/routine/${goal}`} class={`text-[11px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md transition-colors duration-200 ${lang === 'en' ? 'bg-gym-border text-gym-text' : 'text-gym-muted'}`}>EN</a>
+            <a href={`/es/routine/${goal}`} class={`text-[11px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-md transition-colors duration-200 ${lang === 'es' ? 'bg-gym-border text-gym-text' : 'text-gym-muted'}`}>ES</a>
+          </div>
+        </nav>
+
+        <!-- Goal badge pill -->
+        <div class="inline-flex items-center gap-2 rounded-full border px-3 py-1 mb-5" style={`border-color: ${accent}55; background: ${accent}11;`}>
+          <div class="w-1.5 h-1.5 rounded-full" style={`background: ${accent}`} aria-hidden="true"></div>
+          <span class="text-[11px] font-bold uppercase tracking-[0.18em]" style={`color: ${accent}`}>{t('weeklyRoutine')}</span>
+        </div>
+
+        <!-- MEGA heading -->
+        <h1
+          class="text-[64px] font-bold uppercase leading-[0.86] tracking-tight text-gym-text mb-6"
+          style="font-family: var(--font-heading)"
+        >
+          {routineDisplayName}
+        </h1>
+
+        <!-- Stats strip -->
+        <div class="flex border border-gym-border rounded-2xl overflow-hidden bg-gym-surface/50">
+          <div class="flex-1 flex flex-col items-center justify-center py-3.5 border-r border-gym-border">
+            <span class="text-[28px] font-bold leading-none" style={`font-family: var(--font-heading); color: ${accent}`}>{dayCount}</span>
+            <span class="text-[10px] uppercase tracking-widest text-gym-muted mt-1">{labels.days}</span>
+          </div>
+          <div class="flex-1 flex flex-col items-center justify-center py-3.5">
+            <span class="text-[28px] font-bold leading-none" style={`font-family: var(--font-heading); color: ${accent}`}>{exerciseCount}</span>
+            <span class="text-[10px] uppercase tracking-widest text-gym-muted mt-1">{labels.exercises}</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── RATIONALE ──────────────────────────────────────────── -->
+    <section class="px-4 mb-8" aria-label={t('routineRationale')}>
+      <div class="rounded-xl bg-gym-surface border border-gym-border overflow-hidden" style={`border-left: 3px solid ${accent}`}>
+        <div class="px-4 pt-4 pb-4">
+          <!-- Quote icon -->
+          <svg viewBox="0 0 24 24" class="w-5 h-5 mb-2" fill="currentColor" aria-hidden="true" style={`color: ${accent}66`}>
+            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z"/>
+          </svg>
+          <p class="text-sm text-gym-muted leading-relaxed">
+            {getRoutineRationale(routine, lang)}
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TRAINING DAYS ──────────────────────────────────────── -->
+    <section class="px-4 pb-14" aria-label={t('trainingDays')}>
+
+      <!-- Section divider label -->
+      <div class="flex items-center gap-3 mb-5">
+        <div class="flex-1 h-px bg-gym-border"></div>
+        <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-gym-muted whitespace-nowrap">
+          {labels.schedule}
+        </span>
+        <div class="flex-1 h-px bg-gym-border"></div>
+      </div>
+
+      <div class="flex flex-col gap-4">
+        {routine.days.map((day) => (
+          <RoutineDay routine={routine} day={day} goal={goal as Goal} lang={lang} />
+        ))}
+      </div>
+
+    </section>
+
+  </body>
+</html>

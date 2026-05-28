@@ -1,0 +1,62 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { ROUTINES } from '../../data/routines';
+import { EXERCISE_CATALOG } from '../../data/exercises/catalog';
+import { getExerciseByExerciseDbId } from '../../services/exercise-lookup';
+import ExerciseCard from '../../components/ExerciseCard.astro';
+import '../../styles/global.css';
+
+const routineRefs = Object.values(ROUTINES).flatMap((routine) =>
+  routine.days.flatMap((day) =>
+    day.exercises.map((exercise) => ({ exercise, routine, day })),
+  ),
+);
+
+export const getStaticPaths = (() => {
+  const refs = Object.values(ROUTINES).flatMap((routine) =>
+    routine.days.flatMap((day) =>
+      day.exercises.map((exercise) => ({ exercise, routine, day })),
+    ),
+  );
+  const ids = new Set(refs.map(({ exercise }) => EXERCISE_CATALOG[exercise.exerciseKey].exerciseDbId));
+  return [...ids].map((id) => ({ params: { id } }));
+}) satisfies GetStaticPaths;
+
+const { id } = Astro.params;
+const exercise = getExerciseByExerciseDbId(id ?? '');
+const match = routineRefs.find(({ exercise: ref }) => EXERCISE_CATALOG[ref.exerciseKey].exerciseDbId === id);
+
+if (!exercise || !match) {
+  return Astro.redirect('/');
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={`${match.exercise.name} form cues, common mistakes, and animated demo.`} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <title>{match.exercise.name} — Gym Planner</title>
+  </head>
+  <body class="min-h-screen bg-gym-bg text-gym-text">
+    <main class="px-4 pt-6 pb-12 max-w-lg mx-auto">
+      <nav class="mb-6">
+        <a href={`/routine/${match.routine.goal}`} class="inline-flex items-center gap-1.5 text-sm text-gym-muted active:text-gym-text transition-colors duration-150 min-h-[44px]">
+          <svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          Back to {match.routine.displayName}
+        </a>
+      </nav>
+
+      <ExerciseCard exercise={exercise} routine={match.routine} day={match.day} routineRef={match.exercise} />
+    </main>
+  </body>
+</html>

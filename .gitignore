@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+.vercel/
+
+# Environment — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# Astro
+.astro/
+
+# OS
+.DS_Store
+
+# NOTE: src/data/exercises/exercises.json is intentionally NOT ignored — commit it.

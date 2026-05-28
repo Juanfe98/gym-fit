@@ -1,0 +1,106 @@
+---
+import type { Goal } from '../types';
+import { defaultLanguage, type Language } from '../i18n/config';
+import { goalSubtitles } from '../i18n/ui';
+
+interface Props {
+  goal: Goal;
+  displayName: string;
+  href: string;
+  lang?: Language;
+}
+
+const { goal, displayName, href, lang = defaultLanguage } = Astro.props;
+
+const accentColors: Record<Goal, string> = {
+  'muscle-gain': '#F97316',
+  strength: '#EF4444',
+  'fat-loss': '#22C55E',
+  conditioning: '#3B82F6',
+};
+
+const icons: Record<Goal, string> = {
+  'muscle-gain': `
+    <circle cx="6" cy="12" r="3.5" stroke="currentColor" stroke-width="1.75" fill="none"/>
+    <circle cx="18" cy="12" r="3.5" stroke="currentColor" stroke-width="1.75" fill="none"/>
+    <line x1="9.5" y1="12" x2="14.5" y2="12" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+  `,
+  strength: `
+    <path d="M12 19V5M5 12l7-7 7 7"
+      stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  `,
+  'fat-loss': `
+    <path d="M12 21a9 9 0 01-6.364-2.636C3 15.74 3 11 7 7c.5 2.5 2 4 4 4.5-.5-2 0-4.5 2-7 1.5 2 4 4.5 4 8.5a9 9 0 01-5 8z"
+      stroke="currentColor" stroke-width="1.75"
+      stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  `,
+  conditioning: `
+    <path d="M13 10V3L4 14h7v7l9-11h-7z"
+      stroke="currentColor" stroke-width="1.75"
+      stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  `,
+};
+
+const subtitle = goalSubtitles[lang][goal];
+const accentColor = accentColors[goal];
+const iconSvg = icons[goal];
+---
+
+<a
+  href={href}
+  style={`--accent: ${accentColor}`}
+  class="
+    group relative flex flex-col gap-3 rounded-2xl p-5
+    bg-gym-surface border-2 border-[var(--accent)]
+    min-h-[160px] cursor-pointer
+    transition-all duration-200
+    active:scale-[0.97] active:brightness-90
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-gym-bg
+  "
+  aria-label={`${displayName} — ${subtitle}`}
+>
+  <!-- Subtle top glow strip -->
+  <div
+    class="absolute inset-x-0 top-0 h-px rounded-t-2xl"
+    style={`background: linear-gradient(90deg, transparent, ${accentColor}80, transparent)`}
+  />
+
+  <!-- Icon -->
+  <div class="w-12 h-12 flex items-center justify-center rounded-xl" style={`background: ${accentColor}22`}>
+    <svg
+      viewBox="0 0 24 24"
+      class="w-7 h-7"
+      style={`color: ${accentColor}`}
+      aria-hidden="true"
+      set:html={iconSvg}
+    />
+  </div>
+
+  <!-- Text -->
+  <div class="flex flex-col gap-0.5 mt-auto">
+    <span
+      class="text-xl font-bold uppercase leading-tight tracking-wide text-gym-text"
+      style="font-family: var(--font-heading)"
+    >
+      {displayName}
+    </span>
+    <span class="text-sm text-gym-muted leading-snug">
+      {subtitle}
+    </span>
+  </div>
+
+  <!-- Chevron -->
+  <svg
+    viewBox="0 0 24 24"
+    class="absolute bottom-4 right-4 w-5 h-5 text-gym-muted transition-transform duration-200 group-active:translate-x-0.5"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M9 18l6-6-6-6"/>
+  </svg>
+</a>
