@@ -17,6 +17,20 @@
 
   --color-muscle-primary: #EF4444;
   --color-muscle-secondary: #F97316;
+
+  --color-sync-pending: #F59E0B;
+  --color-sync-failed: #EF4444;
+  --color-sync-ok: #22C55E;
+
+  --spacing-touch: 44px;
+
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
 }
 
 html,

@@ -21,10 +21,10 @@
 > ⚠️ Current repo is Astro. These tasks create the Next.js project foundation before any feature work.
 
 - [x] T001 Scaffold Next.js 15+ project with `--typescript --tailwind --app --src-dir --import-alias "@/*"`, preserving `src/data/` and `src/services/exercisedb.ts` from the existing Astro project
-- [ ] T002 Install locked dependencies: `@supabase/ssr @supabase/supabase-js dexie dexie-react-hooks zustand @tanstack/react-query @hookform/resolvers react-hook-form zod @dnd-kit/core @dnd-kit/sortable`
-- [ ] T003 [P] Configure TypeScript strict mode in `tsconfig.json` (strict: true, paths alias `@/*`)
-- [ ] T004 [P] Configure Tailwind CSS v4 in `src/styles/global.css` with `@theme` tokens (colors, spacing, typography) matching mobile-first design system
-- [ ] T005 [P] Create `.env.local` template and `.env.example` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- [x] T002 Install locked dependencies: `@supabase/ssr @supabase/supabase-js dexie dexie-react-hooks zustand @tanstack/react-query @hookform/resolvers react-hook-form zod @dnd-kit/core @dnd-kit/sortable`
+- [x] T003 [P] Configure TypeScript strict mode in `tsconfig.json` (strict: true, paths alias `@/*`)
+- [x] T004 [P] Configure Tailwind CSS v4 in `src/styles/global.css` with `@theme` tokens (colors, spacing, typography) matching mobile-first design system
+- [x] T005 [P] Create `.env.local` template and `.env.example` with `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 
 **Checkpoint**: `npm run build` passes on empty Next.js project
 
@@ -38,19 +38,19 @@
 
 ### Supabase Infrastructure
 
-- [ ] T006 Create `src/lib/supabase/client.ts` — browser Supabase client using `createBrowserClient` from `@supabase/ssr`
-- [ ] T007 Create `src/lib/supabase/server.ts` — server Supabase client using `createServerClient` from `@supabase/ssr` for use in Server Components and Server Actions
-- [ ] T008 Create `src/lib/supabase/middleware.ts` — `updateSession()` function that refreshes auth cookie on every request and redirects unauthenticated users to `/login`
-- [ ] T009 Create `src/middleware.ts` — Next.js middleware entry point calling `updateSession`, matching all `(app)` routes
+- [x] T006 Create `src/lib/supabase/client.ts` — browser Supabase client using `createBrowserClient` from `@supabase/ssr`
+- [x] T007 Create `src/lib/supabase/server.ts` — server Supabase client using `createServerClient` from `@supabase/ssr` for use in Server Components and Server Actions
+- [x] T008 Create `src/lib/supabase/middleware.ts` — `updateSession()` function that refreshes auth cookie on every request and redirects unauthenticated users to `/login`
+- [x] T009 Create `src/middleware.ts` — Next.js middleware entry point calling `updateSession`, matching all `(app)` routes
 
 ### Database
 
-- [ ] T010 Create Supabase migration `supabase/migrations/001_workout_sessions.sql` — creates `workout_sessions`, `session_exercises`, `set_logs`, `personal_records` tables with RLS policies exactly as defined in `data-model.md` section 1
-- [ ] T011 Apply migration to local Supabase instance with `supabase db push` and verify all 4 tables exist with RLS enabled in Supabase Studio
+- [x] T010 Create Supabase migration `supabase/migrations/001_workout_sessions.sql` — creates `workout_sessions`, `session_exercises`, `set_logs`, `personal_records` tables with RLS policies exactly as defined in `data-model.md` section 1
+- [x] T011 Apply migration to local Supabase instance with `supabase db push` and verify all 4 tables exist with RLS enabled in Supabase Studio
 
 ### Offline DB
 
-- [ ] T012 Create `src/lib/offline-db.ts` — Dexie `GymPlannerDB` class with schema v1 exactly as defined in `data-model.md` section 2; export singleton `db` guarded by `typeof window !== 'undefined'`
+- [x] T012 Create `src/lib/offline-db.ts` — Dexie `GymPlannerDB` class with schema v1 exactly as defined in `data-model.md` section 2; export singleton `db` guarded by `typeof window !== 'undefined'`
 
 ### Domain Types
 
