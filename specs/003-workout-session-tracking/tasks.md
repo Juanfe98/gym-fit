@@ -54,25 +54,25 @@
 
 ### Domain Types
 
-- [ ] T013 [P] Create `src/modules/workout-session/types/index.ts` — all TypeScript domain types from `data-model.md` section 3: `SetType`, `WeightUnit`, `SessionStatus`, `SyncStatus`, `SetInput`, `SetLogDraft`, `SessionExerciseDraft`, `ActiveSessionDraft`, `FinishedSession`, `PrMap`
-- [ ] T014 [P] Create `src/modules/workout-session/validation/set-log.schema.ts` — Zod schema validating `SetInput` (weight > 0, reps integer > 0, setType enum, rpe 1–10 optional)
+- [x] T013 [P] Create `src/modules/workout-session/types/index.ts` — all TypeScript domain types from `data-model.md` section 3: `SetType`, `WeightUnit`, `SessionStatus`, `SyncStatus`, `SetInput`, `SetLogDraft`, `SessionExerciseDraft`, `ActiveSessionDraft`, `FinishedSession`, `PrMap`
+- [x] T014 [P] Create `src/modules/workout-session/validation/set-log.schema.ts` — Zod schema validating `SetInput` (weight > 0, reps integer > 0, setType enum, rpe 1–10 optional)
 
 ### Utilities
 
-- [ ] T015 [P] Create `src/modules/workout-session/utils/volume.ts` — `calculateTotalVolume()` function (excludes warmup sets, converts units, matches spec assumption)
-- [ ] T016 [P] Create `src/modules/workout-session/utils/unit-conversion.ts` — `toDisplayUnit(weight, storedUnit, displayUnit)` for kg ↔ lbs conversion
-- [ ] T017 [P] Create `src/modules/workout-session/utils/idempotency.ts` — `generateId()` wrapper around `crypto.randomUUID()` for client-side UUID generation
+- [x] T015 [P] Create `src/modules/workout-session/utils/volume.ts` — `calculateTotalVolume()` function (excludes warmup sets, converts units, matches spec assumption)
+- [x] T016 [P] Create `src/modules/workout-session/utils/unit-conversion.ts` — `toDisplayUnit(weight, storedUnit, displayUnit)` for kg ↔ lbs conversion
+- [x] T017 [P] Create `src/modules/workout-session/utils/idempotency.ts` — `generateId()` wrapper around `crypto.randomUUID()` for client-side UUID generation
 
 ### Zustand Stores
 
-- [ ] T018 Create `src/modules/workout-session/stores/workout-session-store.ts` — Zustand store implementing full `WorkoutSessionStore` interface from `contracts/session-store.ts`; every mutating action writes to Dexie before updating in-memory state; all session and exercise IDs are `generateId()` UUIDs
-- [ ] T019 Create `src/modules/workout-session/stores/timer-store.ts` — Zustand store implementing `TimerStore` interface: elapsed session timer (`setInterval` at 1s) and rest timer state with `startedAt` timestamp for crash recovery
-- [ ] T020 Create `src/modules/workout-session/stores/offline-queue-store.ts` — Zustand store implementing `OfflineQueueStore` interface; wraps `drainQueue` (stubbed — implemented in US2)
+- [x] T018 Create `src/modules/workout-session/stores/workout-session-store.ts` — Zustand store implementing full `WorkoutSessionStore` interface from `contracts/session-store.ts`; every mutating action writes to Dexie before updating in-memory state; all session and exercise IDs are `generateId()` UUIDs
+- [x] T019 Create `src/modules/workout-session/stores/timer-store.ts` — Zustand store implementing `TimerStore` interface: elapsed session timer (`setInterval` at 1s) and rest timer state with `startedAt` timestamp for crash recovery
+- [x] T020 Create `src/modules/workout-session/stores/offline-queue-store.ts` — Zustand store implementing `OfflineQueueStore` interface; wraps `drainQueue` (stubbed — implemented in US2)
 
 ### Next.js Route Structure
 
-- [ ] T021 Create `src/app/(auth)/login/page.tsx` — minimal login page stub (email + password form, redirects to `/` on success); required for middleware redirect target
-- [ ] T022 Create `src/app/(app)/layout.tsx` — authenticated layout shell with bottom navigation placeholder and TanStack Query provider wrapping children
+- [x] T021 Create `src/app/(auth)/login/page.tsx` — minimal login page stub (email + password form, redirects to `/` on success); required for middleware redirect target
+- [x] T022 Create `src/app/(app)/layout.tsx` — authenticated layout shell with bottom navigation placeholder and TanStack Query provider wrapping children
 
 **Checkpoint**: `npm run build` passes; `supabase start` shows 4 tables with RLS; Dexie opens without error in browser console
 
