@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Trophy } from 'lucide-react'
 import { syncCompletedSession } from '../services/session-supabase'
 import { finishedSessionToPayload } from '../utils/session-payload'
 import type { FinishedSession } from '../types'
@@ -42,7 +43,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6">
-      <h1 className="text-2xl font-bold">Workout Complete</h1>
+      <h1 className="heading text-3xl text-gym-text">Workout Complete</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3">
@@ -51,7 +52,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
         <Stat label="Exercises" value={String(initialSession.exercises.length)} />
         <Stat label="Sets" value={String(initialSession.exercises.reduce((n, e) => n + e.sets.length, 0))} />
         {initialSession.prCount > 0 && (
-          <Stat label="PRs" value={`${initialSession.prCount} 🏆`} />
+          <Stat label="PRs" value={String(initialSession.prCount)} highlight />
         )}
       </div>
 
@@ -67,8 +68,11 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
 
       {/* PR list */}
       {initialSession.prCount > 0 && (
-        <div className="rounded border border-yellow-500/30 bg-yellow-500/10 px-3 py-2">
-          <p className="text-sm font-semibold text-yellow-400">Personal Records</p>
+        <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-3">
+          <div className="mb-2 flex items-center gap-2">
+            <Trophy className="h-4 w-4 text-yellow-400" />
+            <p className="text-sm font-semibold text-yellow-400">Personal Records</p>
+          </div>
           {initialSession.exercises
             .flatMap((ex) => ex.sets.filter((s) => s.isPr).map((s) => ({ ex, s })))
             .map(({ ex, s }) => (
@@ -94,7 +98,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
         type="button"
         onClick={handleSave}
         disabled={saving}
-        className="h-11 rounded bg-orange-500 font-semibold text-white disabled:opacity-50"
+        className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
       >
         {saving ? 'Saving…' : 'Save & Done'}
       </button>
@@ -102,11 +106,11 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
   )
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
+function Stat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="rounded border border-gym-border bg-gym-surface px-3 py-3">
+    <div className={`rounded-lg border px-3 py-3 ${highlight ? 'border-yellow-500/30 bg-yellow-500/10' : 'border-gym-border bg-gym-surface'}`}>
       <p className="text-xs text-gym-muted">{label}</p>
-      <p className="text-lg font-semibold">{value}</p>
+      <p className={`metric text-xl ${highlight ? 'text-yellow-400' : ''}`}>{value}</p>
     </div>
   )
 }

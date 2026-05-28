@@ -41,15 +41,25 @@ export function finishedSessionToPayload(session: FinishedSession): SyncSessionP
         logged_at: new Date(s.loggedAt).toISOString(),
       }))
     ),
-    personalRecords: session.exercises
-      .flatMap((ex) => ex.sets.filter((s) => s.isPr).map((s) => ({ ex, s })))
-      .map(({ ex, s }) => ({
+    personalRecords: (() => {
+      const best = new Map<string, { weight: number; set: typeof session.exercises[0]['sets'][0]; exerciseId: string }>()
+      for (const ex of session.exercises) {
+        for (const s of ex.sets) {
+          if (!s.isPr) continue
+          const existing = best.get(ex.exerciseId)
+          if (!existing || s.weight > existing.weight) {
+            best.set(ex.exerciseId, { weight: s.weight, set: s, exerciseId: ex.exerciseId })
+          }
+        }
+      }
+      return Array.from(best.values()).map(({ set: s, exerciseId }) => ({
         user_id: session.userId,
-        exercise_id: ex.exerciseId,
+        exercise_id: exerciseId,
         max_weight: s.weight,
         max_weight_unit: s.weightUnit,
         achieved_at: new Date(s.loggedAt).toISOString(),
         set_log_id: s.id,
-      })),
+      }))
+    })(),
   }
 }

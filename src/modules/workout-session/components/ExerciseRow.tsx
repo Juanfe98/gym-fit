@@ -1,12 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { GripVertical, MoreHorizontal } from 'lucide-react'
 import { useSortable } from '@dnd-kit/sortable'
 import { useWorkoutSessionStore } from '../stores/workout-session-store'
+import { useTimerStore } from '../stores/timer-store'
+import { usePrDetection } from '../hooks/use-pr-detection'
 import { SetLogRow } from './SetLogRow'
 import { SetLogForm } from './SetLogForm'
 import { ExercisePicker } from './ExercisePicker'
-import type { SessionExerciseDraft } from '../types'
+import { CancelSessionDialog } from './CancelSessionDialog'
+import type { SessionExerciseDraft, SetInput } from '../types'
+
+const DEFAULT_REST_SECONDS = 90
 
 interface ExerciseRowProps {
   exercise: SessionExerciseDraft
@@ -17,11 +23,16 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
   const removeExercise = useWorkoutSessionStore((s) => s.removeExercise)
   const replaceExercise = useWorkoutSessionStore((s) => s.replaceExercise)
   const updateExerciseNotes = useWorkoutSessionStore((s) => s.updateExerciseNotes)
+  const userId = useWorkoutSessionStore((s) => s.session?.userId ?? null)
+  const startRestTimer = useTimerStore((s) => s.startRestTimer)
+  const { isPr: checkIsPr } = usePrDetection(userId)
 
   const [showAddSet, setShowAddSet] = useState(false)
   const [showReplacePicker, setShowReplacePicker] = useState(false)
-  const [pendingRemove, setPendingRemove] = useState(false)
+  const [showRemoveDialog, setShowRemoveDialog] = useState(false)
+  const [pendingReplaceRef, setPendingReplaceRef] = useState<{ exerciseId: string; exerciseNameSnapshot: string } | null>(null)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [latestPrSetId, setLatestPrSetId] = useState<string | null>(null)
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: exercise.id })
@@ -34,19 +45,28 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
       }
     : undefined
 
-  async function handleLogSet(values: Parameters<typeof addSetToExercise>[1]) {
-    await addSetToExercise(exercise.id, values)
+  async function handleLogSet(values: SetInput) {
+    const prResult = checkIsPr(exercise.exerciseId, values.weight, values.weightUnit)
+    const setId = await addSetToExercise(exercise.id, values, prResult)
+    if (prResult) setLatestPrSetId(setId)
     setShowAddSet(false)
+    startRestTimer(DEFAULT_REST_SECONDS)
   }
 
   async function handleRemoveConfirm() {
     await removeExercise(exercise.id)
-    setPendingRemove(false)
+    setShowRemoveDialog(false)
   }
 
-  async function handleReplaceSelect(ref: { exerciseId: string; exerciseNameSnapshot: string }) {
-    await replaceExercise(exercise.id, ref)
+  function handleReplaceSelect(ref: { exerciseId: string; exerciseNameSnapshot: string }) {
     setShowReplacePicker(false)
+    setPendingReplaceRef(ref)
+  }
+
+  async function handleReplaceConfirm() {
+    if (!pendingReplaceRef) return
+    await replaceExercise(exercise.id, pendingReplaceRef)
+    setPendingReplaceRef(null)
   }
 
   return (
@@ -61,7 +81,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
           {...attributes}
           {...listeners}
         >
-          ⠿
+          <GripVertical className="h-5 w-5" />
         </button>
 
         <span className="flex-1 font-semibold capitalize">{exercise.exerciseNameSnapshot}</span>
@@ -71,24 +91,25 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
           <button
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
-            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gym-muted"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gym-muted transition-colors hover:text-gym-text"
             aria-label="Exercise options"
           >
-            ⋯
+            <MoreHorizontal className="h-5 w-5" />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-full z-10 flex min-w-[120px] flex-col rounded border border-gym-border bg-gym-surface shadow-lg">
+            <div className="absolute right-0 top-full z-10 flex min-w-[140px] flex-col overflow-hidden rounded-lg border border-gym-border bg-gym-surface shadow-lg">
               <button
                 type="button"
-                className="px-4 py-3 text-left text-sm"
+                className="px-4 py-3 text-left text-sm transition-colors hover:bg-gym-surface-2"
                 onClick={() => { setShowReplacePicker(true); setMenuOpen(false) }}
               >
                 Replace
               </button>
+              <div className="mx-3 border-t border-gym-border-subtle" />
               <button
                 type="button"
-                className="px-4 py-3 text-left text-sm text-red-400"
-                onClick={() => { setPendingRemove(true); setMenuOpen(false) }}
+                className="px-4 py-3 text-left text-sm text-red-400 transition-colors hover:bg-red-500/10"
+                onClick={() => { setShowRemoveDialog(true); setMenuOpen(false) }}
               >
                 Remove
               </button>
@@ -98,11 +119,11 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
       </div>
 
       {/* Sets */}
-      {exercise.sets.length === 0 && !showAddSet && (
+      {exercise.sets.length === 0 && (
         <p className="px-3 py-2 text-sm text-gym-muted">Log your first set</p>
       )}
       {exercise.sets.map((set) => (
-        <SetLogRow key={set.id} set={set} />
+        <SetLogRow key={set.id} set={set} isNew={set.id === latestPrSetId} />
       ))}
 
       {/* Inline add-set form */}
@@ -132,7 +153,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
         <button
           type="button"
           onClick={() => setShowAddSet(true)}
-          className="flex min-h-[44px] w-full items-center justify-center gap-1 text-sm text-orange-400"
+          className="flex min-h-[44px] w-full items-center justify-center gap-1 text-sm text-gym-accent transition-colors hover:bg-gym-accent-subtle"
         >
           + Add Set
         </button>
@@ -149,32 +170,30 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
         />
       </div>
 
-      {/* Remove confirm */}
-      {pendingRemove && (
-        <div className="flex gap-2 border-t border-gym-border px-3 py-2">
-          <span className="flex-1 text-sm text-gym-muted">Remove this exercise?</span>
-          <button
-            type="button"
-            onClick={handleRemoveConfirm}
-            className="min-h-[44px] px-3 text-sm text-red-400"
-          >
-            Remove
-          </button>
-          <button
-            type="button"
-            onClick={() => setPendingRemove(false)}
-            className="min-h-[44px] px-3 text-sm text-gym-muted"
-          >
-            Cancel
-          </button>
-        </div>
-      )}
-
-      {/* Replace picker */}
       {showReplacePicker && (
         <ExercisePicker
           onSelect={handleReplaceSelect}
           onClose={() => setShowReplacePicker(false)}
+        />
+      )}
+
+      {pendingReplaceRef && (
+        <CancelSessionDialog
+          title="Replace exercise?"
+          message={`"${exercise.exerciseNameSnapshot}" and all its logged sets will be removed and replaced with "${pendingReplaceRef.exerciseNameSnapshot}".`}
+          confirmLabel="Replace"
+          onConfirm={handleReplaceConfirm}
+          onCancel={() => setPendingReplaceRef(null)}
+        />
+      )}
+
+      {showRemoveDialog && (
+        <CancelSessionDialog
+          title="Remove exercise?"
+          message={`"${exercise.exerciseNameSnapshot}" and all its logged sets will be removed from this session.`}
+          confirmLabel="Remove"
+          onConfirm={handleRemoveConfirm}
+          onCancel={() => setShowRemoveDialog(false)}
         />
       )}
     </div>

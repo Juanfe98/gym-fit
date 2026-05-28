@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Dumbbell } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
 export default function LoginPage() {
@@ -31,37 +32,55 @@ export default function LoginPage() {
 
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
-      <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4">
-        <h1 className="text-2xl font-bold">Sign in</h1>
+      <div className="flex w-full max-w-sm flex-col gap-8">
+        {/* Brand */}
+        <div className="flex flex-col items-center gap-3">
+          <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gym-accent glow-accent">
+            <Dumbbell className="h-8 w-8 text-white" strokeWidth={2} />
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <h1 className="heading text-3xl tracking-wide text-gym-text">Gym Planner</h1>
+            <p className="text-sm text-gym-muted">Track. Lift. Progress.</p>
+          </div>
+        </div>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {error && (
+            <p className="rounded border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+              {error}
+            </p>
+          )}
 
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="h-11 rounded border border-gray-600 bg-transparent px-3 text-sm"
-        />
+          <div className="flex flex-col gap-3">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="h-11 rounded-lg border border-gym-border bg-gym-surface px-3 text-sm transition-colors focus:border-gym-border-strong focus:outline-none"
+            />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="h-11 rounded border border-gray-600 bg-transparent px-3 text-sm"
-        />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="h-11 rounded-lg border border-gym-border bg-gym-surface px-3 text-sm transition-colors focus:border-gym-border-strong focus:outline-none"
+            />
+          </div>
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="h-11 rounded bg-orange-500 font-semibold text-white disabled:opacity-50"
-        >
-          {loading ? 'Signing in…' : 'Sign in'}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={loading}
+            className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
+          >
+            {loading ? 'Signing in…' : 'Sign in'}
+          </button>
+        </form>
+      </div>
     </main>
   )
 }

@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { db } from '@/lib/offline-db'
 import { generateId } from '../utils/idempotency'
 import { calculateTotalVolume } from '../utils/volume'
+import { useOfflineQueueStore } from './offline-queue-store'
 import type {
   ActiveSessionDraft,
   FinishedSession,
@@ -27,7 +28,7 @@ interface WorkoutSessionState {
   replaceExercise: (sessionExerciseId: string, newExercise: ExerciseRef) => Promise<void>
   reorderExercises: (orderedIds: string[]) => Promise<void>
   updateExerciseNotes: (sessionExerciseId: string, notes: string) => Promise<void>
-  logSet: (sessionExerciseId: string, input: SetInput) => Promise<string>
+  logSet: (sessionExerciseId: string, input: SetInput, isPr?: boolean) => Promise<string>
   editSet: (setId: string, input: SetInput) => Promise<void>
   deleteSet: (setId: string) => Promise<void>
   updateSessionNotes: (notes: string) => Promise<void>
@@ -150,6 +151,22 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
   removeExercise: async (sessionExerciseId) => {
     const { session } = get()
     if (!session) throw new Error('No active session')
+
+    const syncedSets = await db.setLogs
+      .where('sessionExerciseId')
+      .equals(sessionExerciseId)
+      .filter((s) => s.syncStatus === 'synced')
+      .toArray()
+
+    for (const s of syncedSets) {
+      await useOfflineQueueStore.getState().enqueue({
+        table: 'set_logs',
+        operation: 'delete',
+        payload: { id: s.id },
+        idempotencyKey: `delete-${s.id}`,
+      })
+    }
+
     await db.transaction('rw', [db.sessionExercises, db.setLogs], async () => {
       await db.setLogs.where('sessionExerciseId').equals(sessionExerciseId).delete()
       await db.sessionExercises.delete(sessionExerciseId)
@@ -243,7 +260,7 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
     }))
   },
 
-  logSet: async (sessionExerciseId, input) => {
+  logSet: async (sessionExerciseId, input, isPr = false) => {
     const { session } = get()
     if (!session) throw new Error('No active session')
     const exercise = session.exercises.find((e) => e.id === sessionExerciseId)
@@ -263,10 +280,30 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
       setType: input.setType,
       rpe: input.rpe,
       isCompleted: true,
-      isPr: false,
+      isPr,
       notes: input.notes,
       loggedAt,
       syncStatus: 'local',
+    })
+
+    await useOfflineQueueStore.getState().enqueue({
+      table: 'set_logs',
+      operation: 'upsert',
+      payload: {
+        id,
+        session_exercise_id: sessionExerciseId,
+        set_number: setNumber,
+        weight: input.weight ?? null,
+        weight_unit: input.weightUnit,
+        reps: input.reps ?? null,
+        set_type: input.setType,
+        rpe: input.rpe ?? null,
+        is_completed: true,
+        is_pr: isPr,
+        notes: input.notes ?? null,
+        logged_at: new Date(loggedAt).toISOString(),
+      },
+      idempotencyKey: id,
     })
 
     set((state) => ({
@@ -279,7 +316,7 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
                     ...e,
                     sets: [
                       ...e.sets,
-                      { id, setNumber, isPr: false, loggedAt, ...input },
+                      { id, setNumber, isPr, loggedAt, ...input },
                     ],
                   }
                 : e
@@ -301,6 +338,30 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
       notes: input.notes,
       syncStatus: 'local',
     })
+
+    const updated = await db.setLogs.get(setId)
+    if (updated) {
+      await useOfflineQueueStore.getState().enqueue({
+        table: 'set_logs',
+        operation: 'upsert',
+        payload: {
+          id: updated.id,
+          session_exercise_id: updated.sessionExerciseId,
+          set_number: updated.setNumber,
+          weight: updated.weight ?? null,
+          weight_unit: updated.weightUnit,
+          reps: updated.reps ?? null,
+          set_type: updated.setType,
+          rpe: updated.rpe ?? null,
+          is_completed: updated.isCompleted,
+          is_pr: updated.isPr,
+          notes: updated.notes ?? null,
+          logged_at: new Date(updated.loggedAt).toISOString(),
+        },
+        idempotencyKey: setId,
+      })
+    }
+
     set((state) => ({
       session: state.session
         ? {
@@ -317,6 +378,12 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
   },
 
   deleteSet: async (setId) => {
+    await useOfflineQueueStore.getState().enqueue({
+      table: 'set_logs',
+      operation: 'delete',
+      payload: { id: setId },
+      idempotencyKey: `delete-${setId}`,
+    })
     await db.setLogs.delete(setId)
     set((state) => ({
       session: state.session

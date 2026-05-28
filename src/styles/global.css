@@ -1,37 +1,103 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────────────────────────
+   GYM PLANNER — Design Token System
+   Steel-black surfaces · Athletic orange · Barlow type family
+
+   Token hierarchy:
+   gym-bg            → page backgrounds
+   gym-surface       → panels, sheets, modals
+   gym-surface-2     → cards, exercise rows
+   gym-surface-3     → inputs, active items, highest elevation
+   gym-border-subtle → dividers, section separators
+   gym-border        → default borders
+   gym-border-strong → focus rings, selected states
+   gym-text          → primary text
+   gym-muted         → secondary labels, metadata
+   gym-disabled      → disabled states
+   gym-accent        → primary brand CTA (orange)
+───────────────────────────────────────────────────────────────── */
+
 @theme {
-  --font-heading: 'Barlow Condensed', sans-serif;
-  --font-body: 'Barlow', sans-serif;
+  /* ── Fonts ──────────────────────────────────────────────────── */
+  --font-heading: var(--font-barlow-condensed, 'Barlow Condensed', sans-serif);
+  --font-body:    var(--font-barlow, 'Barlow', sans-serif);
 
-  --color-gym-bg: #0F172A;
-  --color-gym-surface: #1E293B;
-  --color-gym-border: #334155;
-  --color-gym-text: #F8FAFC;
-  --color-gym-muted: #94A3B8;
+  /* ── Override Tailwind orange → brand athletic orange ───────── */
+  --color-orange-300: #FFAB82;
+  --color-orange-400: #FF7445;
+  --color-orange-500: #F7521E;
+  --color-orange-600: #D84410;
+  --color-orange-700: #B0360C;
 
-  --color-goal-muscle: #F97316;
-  --color-goal-strength: #EF4444;
-  --color-goal-fatloss: #22C55E;
+  /* ── App surfaces — steel-blue dark ────────────────────────── */
+  --color-gym-bg:             #07111F;
+  --color-gym-surface:        #0F1C2E;
+  --color-gym-surface-2:      #152438;
+  --color-gym-surface-3:      #1C2F48;
+  --color-gym-border-subtle:  #152035;
+  --color-gym-border:         #1E3350;
+  --color-gym-border-strong:  #2A4670;
+
+  /* ── Text ───────────────────────────────────────────────────── */
+  --color-gym-text:      #EDF2FA;
+  --color-gym-muted:     #7384A0;
+  --color-gym-disabled:  #384D68;
+
+  /* ── Brand accent ───────────────────────────────────────────── */
+  --color-gym-accent:        #F7521E;
+  --color-gym-accent-subtle: #F7521E1F;
+
+  /* ── PR gold ────────────────────────────────────────────────── */
+  --color-gym-pr:   #EAB308;
+
+  /* ── Goal colors ────────────────────────────────────────────── */
+  --color-goal-muscle:       #F97316;
+  --color-goal-strength:     #EF4444;
+  --color-goal-fatloss:      #22C55E;
   --color-goal-conditioning: #3B82F6;
 
-  --color-muscle-primary: #EF4444;
-  --color-muscle-secondary: #F97316;
+  /* ── Muscle diagram ─────────────────────────────────────────── */
+  --color-muscle-primary:   #F7521E;
+  --color-muscle-secondary: #FF7445;
 
+  /* ── Status ─────────────────────────────────────────────────── */
   --color-sync-pending: #F59E0B;
-  --color-sync-failed: #EF4444;
-  --color-sync-ok: #22C55E;
+  --color-sync-failed:  #EF4444;
+  --color-sync-ok:      #10B981;
+  --color-success:      #10B981;
+  --color-warning:      #F59E0B;
+  --color-danger:       #EF4444;
 
+  /* ── Touch ──────────────────────────────────────────────────── */
   --spacing-touch: 44px;
 
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-lg: 1.125rem;
-  --font-size-xl: 1.25rem;
-  --font-size-2xl: 1.5rem;
-  --font-size-3xl: 1.875rem;
+  /* ── Font scale ─────────────────────────────────────────────── */
+  --font-size-xs:      0.75rem;   /* 12px */
+  --font-size-sm:      0.875rem;  /* 14px */
+  --font-size-base:    1rem;      /* 16px */
+  --font-size-lg:      1.125rem;  /* 18px */
+  --font-size-xl:      1.25rem;   /* 20px */
+  --font-size-2xl:     1.5rem;    /* 24px */
+  --font-size-3xl:     1.875rem;  /* 30px */
+  --font-size-4xl:     2.25rem;   /* 36px */
+  --font-size-display: 3rem;      /* 48px — metric numbers */
+
+  /* ── Shadows ─────────────────────────────────────────────────── */
+  --shadow-sm:    0 1px 4px rgba(0, 0, 0, 0.5);
+  --shadow-md:    0 4px 16px rgba(0, 0, 0, 0.55);
+  --shadow-lg:    0 8px 32px rgba(0, 0, 0, 0.65);
+  --shadow-glow:  0 0 24px rgba(247, 82, 30, 0.3);
+
+  /* ── Motion ──────────────────────────────────────────────────── */
+  --duration-fast: 150ms;
+  --duration-base: 200ms;
+  --duration-slow: 300ms;
 }
+
+/* ─────────────────────────────────────────────────────────────────
+   Base
+───────────────────────────────────────────────────────────────── */
 
 html,
 body {
@@ -40,15 +106,92 @@ body {
   font-family: var(--font-body);
   font-size: 16px;
   line-height: 1.6;
+  /* Eliminate 300ms tap delay on mobile */
   touch-action: manipulation;
+  /* Prevent accidental pull-to-refresh during workout */
+  overscroll-behavior: contain;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Utility classes
+───────────────────────────────────────────────────────────────── */
+
+/* Metric display — for weight, reps, timer numbers */
+.metric {
+  font-family: var(--font-heading);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Heading style */
+.heading {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* Card surface */
+.card {
+  background-color: var(--color-gym-surface-2);
+  border: 1px solid var(--color-gym-border-subtle);
+  border-radius: 12px;
+}
+
+/* Elevated card */
+.card-elevated {
+  background-color: var(--color-gym-surface-3);
+  border: 1px solid var(--color-gym-border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-md);
+}
+
+/* Standard focus ring (keyboard nav) */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--color-gym-accent);
+  outline-offset: 2px;
+}
+
+/* Scrollbar — hidden, functional */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* PR gold */
+.text-pr {
+  color: var(--color-gym-pr);
+}
+.bg-pr-subtle {
+  background-color: color-mix(in srgb, var(--color-gym-pr) 12%, transparent);
+}
+
+/* Accent glow — CTA buttons, active states */
+.glow-accent {
+  box-shadow: var(--shadow-glow);
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Muscle diagram
+───────────────────────────────────────────────────────────────── */
+
 .muscle-primary {
   fill: var(--color-muscle-primary);
 }
-
 .muscle-secondary {
   fill: var(--color-muscle-secondary);
 }

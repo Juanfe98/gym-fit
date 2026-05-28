@@ -1,5 +1,6 @@
 'use client'
 
+import { Play, Pause } from 'lucide-react'
 import { useTimerStore } from '../stores/timer-store'
 
 function formatElapsed(seconds: number): string {
@@ -36,7 +37,10 @@ export function SessionTimer() {
       <span className="font-mono text-lg font-semibold tabular-nums">
         {formatElapsed(elapsedSeconds)}
       </span>
-      <span className="text-xs text-gym-muted">{isPaused ? '▶' : '⏸'}</span>
+      {isPaused
+        ? <Play className="h-3.5 w-3.5 text-gym-muted" />
+        : <Pause className="h-3.5 w-3.5 text-gym-muted" />
+      }
     </button>
   )
 }

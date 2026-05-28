@@ -1,8 +1,10 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { setInputSchema, type SetInputSchema } from '../validation/set-log.schema'
+import { useWeightUnitPreference } from '../hooks/use-weight-unit-preference'
 import type { SetType, WeightUnit } from '../types'
 
 interface SetLogFormProps {
@@ -20,19 +22,28 @@ const SET_TYPES: { value: SetType; label: string }[] = [
 const WEIGHT_UNITS: WeightUnit[] = ['kg', 'lbs']
 
 export function SetLogForm({ onSubmit, defaultValues, submitLabel = 'Add Set' }: SetLogFormProps) {
+  const [preferredUnit, saveUnit] = useWeightUnitPreference()
+
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
     reset,
   } = useForm<SetInputSchema>({
     resolver: zodResolver(setInputSchema),
     defaultValues: {
-      weightUnit: 'kg',
+      weightUnit: preferredUnit,
       setType: 'normal',
       ...defaultValues,
     },
   })
+
+  const watchedUnit = watch('weightUnit')
+  useEffect(() => {
+    if (watchedUnit) saveUnit(watchedUnit as WeightUnit)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchedUnit])
 
   async function handleValidSubmit(values: SetInputSchema) {
     await onSubmit(values)
@@ -124,7 +135,7 @@ export function SetLogForm({ onSubmit, defaultValues, submitLabel = 'Add Set' }:
       <button
         type="submit"
         disabled={isSubmitting}
-        className="h-11 rounded bg-orange-500 font-semibold text-white disabled:opacity-50"
+        className="h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50"
       >
         {submitLabel}
       </button>

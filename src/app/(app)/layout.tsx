@@ -19,7 +19,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
         <main className="flex-1 pb-16">{children}</main>
-        {/* Bottom navigation — populated in Phase 9 */}
         <nav className="fixed bottom-0 left-0 right-0 h-16 border-t border-gym-border bg-gym-surface" />
       </div>
     </QueryClientProvider>
