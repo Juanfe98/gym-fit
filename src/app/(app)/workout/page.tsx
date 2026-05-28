@@ -5,11 +5,13 @@ import { createClient } from '@/lib/supabase/client'
 import { db } from '@/lib/offline-db'
 import { useWorkoutSessionStore } from '@/modules/workout-session/stores/workout-session-store'
 import { ActiveWorkoutScreen } from '@/modules/workout-session/components/ActiveWorkoutScreen'
+import { useI18n } from '@/i18n/client'
 import type { OfflineWorkoutSession } from '@/lib/offline-db'
 
 type PageStatus = 'checking' | 'idle' | 'recovered' | 'active'
 
 export default function WorkoutPage() {
+  const { t } = useI18n()
   const session = useWorkoutSessionStore((s) => s.session)
   const startSession = useWorkoutSessionStore((s) => s.startSession)
   const recoverSession = useWorkoutSessionStore((s) => s.recoverSession)
@@ -62,7 +64,7 @@ export default function WorkoutPage() {
   if (status === 'checking') {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <span className="text-sm text-gym-muted">Loading…</span>
+        <span className="text-sm text-gym-muted">{t('loading')}</span>
       </div>
     )
   }
@@ -75,9 +77,9 @@ export default function WorkoutPage() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-8 text-center">
         <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold">Resume workout?</h2>
+          <h2 className="text-xl font-semibold">{t('resumeWorkoutTitle')}</h2>
           <p className="text-sm text-gym-muted">
-            An unfinished session was found. Resume where you left off or discard it.
+            {t('resumeWorkoutMessage')}
           </p>
         </div>
         <div className="flex w-full max-w-xs flex-col gap-3">
@@ -86,14 +88,14 @@ export default function WorkoutPage() {
             onClick={handleResume}
             className="h-11 rounded bg-orange-500 font-semibold text-white"
           >
-            Resume
+            {t('resume')}
           </button>
           <button
             type="button"
             onClick={handleDiscard}
             className="h-11 rounded border border-gym-border text-sm text-gym-muted"
           >
-            Discard
+            {t('discard')}
           </button>
         </div>
       </div>
@@ -102,13 +104,13 @@ export default function WorkoutPage() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-8">
-      <h1 className="text-2xl font-bold">Ready to train?</h1>
+      <h1 className="text-2xl font-bold">{t('readyToTrain')}</h1>
       <button
         type="button"
         onClick={handleStart}
         className="h-11 w-full max-w-xs rounded bg-orange-500 font-semibold text-white"
       >
-        Start Workout
+        {t('startWorkout')}
       </button>
     </div>
   )

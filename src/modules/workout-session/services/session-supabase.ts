@@ -10,6 +10,8 @@ export interface SyncSessionPayload {
     started_at: string
     finished_at: string
     duration_seconds: number
+    total_volume: number
+    pr_count: number
     notes: string | null
     source_plan_id: string | null
     source_workout_day_id: string | null

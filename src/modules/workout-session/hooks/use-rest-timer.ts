@@ -1,9 +1,11 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import { useI18n } from '@/i18n/client'
 import { useTimerStore } from '../stores/timer-store'
 
 export function useRestTimer() {
+  const { t } = useI18n()
   const restTimer = useTimerStore((s) => s.restTimer)
   const skipRestTimer = useTimerStore((s) => s.skipRestTimer)
   const [remaining, setRemaining] = useState(0)
@@ -25,10 +27,10 @@ export function useRestTimer() {
     const fireNotification = () => {
       if (typeof Notification === 'undefined') return
       if (Notification.permission === 'granted') {
-        new Notification('Rest complete', { body: 'Time to get back to it.' })
+        new Notification(t('restCompleteTitle'), { body: t('restCompleteBody') })
       } else if (Notification.permission !== 'denied') {
         void Notification.requestPermission().then((p) => {
-          if (p === 'granted') new Notification('Rest complete', { body: 'Time to get back to it.' })
+          if (p === 'granted') new Notification(t('restCompleteTitle'), { body: t('restCompleteBody') })
         })
       }
     }
@@ -59,7 +61,7 @@ export function useRestTimer() {
       document.removeEventListener('visibilitychange', handleVisibilityChange)
       window.removeEventListener('focus', handleFocus)
     }
-  }, [restTimer, computeRemaining, skipRestTimer])
+  }, [restTimer, computeRemaining, skipRestTimer, t])
 
   return {
     remaining,

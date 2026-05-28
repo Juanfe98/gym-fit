@@ -11,9 +11,11 @@ import { SyncStatusBar } from './SyncStatusBar'
 import { ExerciseList } from './ExerciseList'
 import { ExercisePicker } from './ExercisePicker'
 import { RestTimer } from './RestTimer'
+import { useI18n } from '@/i18n/client'
 import { CancelSessionDialog } from './CancelSessionDialog'
 
 export function ActiveWorkoutScreen() {
+  const { t } = useI18n()
   const session = useWorkoutSessionStore((s) => s.session)
   const addExercise = useWorkoutSessionStore((s) => s.addExercise)
   const finishSession = useWorkoutSessionStore((s) => s.finishSession)
@@ -67,16 +69,16 @@ export function ActiveWorkoutScreen() {
             onClick={handleCancelPress}
             className="flex min-h-[44px] items-center px-3 text-sm text-gym-muted"
           >
-            Cancel
+            {t('cancel')}
           </button>
           <button
             type="button"
             onClick={handleFinish}
             disabled={totalSets === 0}
             className="glow-accent flex min-h-[44px] items-center rounded-lg bg-gym-accent px-4 text-sm font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.97] disabled:opacity-40 disabled:shadow-none"
-            title={totalSets === 0 ? 'Add at least one set to finish' : undefined}
+            title={totalSets === 0 ? t('addAtLeastOneSetToFinish') : undefined}
           >
-            Finish
+            {t('finish')}
           </button>
         </div>
       </header>
@@ -85,7 +87,7 @@ export function ActiveWorkoutScreen() {
 
       {totalSets === 0 && (session?.exercises.length ?? 0) > 0 && (
         <p className="bg-gym-surface px-4 py-1.5 text-center text-xs text-gym-muted">
-          Add at least one set to finish
+          {t('addAtLeastOneSetToFinish')}
         </p>
       )}
 
@@ -97,15 +99,15 @@ export function ActiveWorkoutScreen() {
               <Dumbbell className="h-10 w-10" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col gap-1">
-              <p className="font-semibold">Add your first exercise</p>
-              <p className="text-sm text-gym-muted">Tap below to search the exercise library</p>
+              <p className="font-semibold">{t('addFirstExercise')}</p>
+              <p className="text-sm text-gym-muted">{t('tapToSearchExercises')}</p>
             </div>
             <button
               type="button"
               onClick={() => setShowPicker(true)}
               className="glow-accent h-12 rounded-lg bg-gym-accent px-8 font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.97]"
             >
-              Add Exercise
+              {t('addExercise')}
             </button>
           </div>
         ) : (
@@ -120,7 +122,7 @@ export function ActiveWorkoutScreen() {
             type="button"
             onClick={() => setShowPicker(true)}
             className="glow-accent flex h-14 w-14 items-center justify-center rounded-full bg-gym-accent text-2xl font-light text-white shadow-lg transition-all hover:bg-orange-600 active:scale-95"
-            aria-label="Add exercise"
+            aria-label={t('addExerciseAria')}
           >
             +
           </button>
@@ -141,9 +143,9 @@ export function ActiveWorkoutScreen() {
 
       {showDiscardDialog && (
         <CancelSessionDialog
-          title="Discard workout?"
-          message="All logged sets will be lost. This session will not be saved."
-          confirmLabel="Discard Workout"
+          title={t('discardWorkoutTitle')}
+          message={t('discardWorkoutMessage')}
+          confirmLabel={t('discardWorkout')}
           onConfirm={handleDiscardConfirm}
           onCancel={() => setShowDiscardDialog(false)}
         />

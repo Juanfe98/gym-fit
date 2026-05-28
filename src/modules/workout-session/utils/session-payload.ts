@@ -10,6 +10,8 @@ export function finishedSessionToPayload(session: FinishedSession): SyncSessionP
       started_at: new Date(session.startedAt).toISOString(),
       finished_at: new Date(session.finishedAt).toISOString(),
       duration_seconds: session.durationSeconds,
+      total_volume: session.totalVolume,
+      pr_count: session.prCount,
       notes: session.notes ?? null,
       source_plan_id: session.sourcePlanId ?? null,
       source_workout_day_id: session.sourceWorkoutDayId ?? null,

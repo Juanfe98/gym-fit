@@ -1,12 +1,14 @@
 'use client'
 
 import { useRestTimer } from '../hooks/use-rest-timer'
+import { useI18n } from '@/i18n/client'
 import { useTimerStore } from '../stores/timer-store'
 
 const RADIUS = 40
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 export function RestTimer() {
+  const { t } = useI18n()
   const skipRestTimer = useTimerStore((s) => s.skipRestTimer)
   const { remaining, total, isActive } = useRestTimer()
 
@@ -19,7 +21,7 @@ export function RestTimer() {
     <div className="fixed inset-x-0 bottom-0 z-50 flex flex-col items-center gap-4 rounded-t-2xl border-t border-gym-border bg-gym-surface px-6 pb-8 pt-6 shadow-xl">
       <div className="h-1 w-12 rounded-full bg-gym-border" />
 
-      <p className="text-sm font-medium text-gym-muted">Rest</p>
+      <p className="text-sm font-medium text-gym-muted">{t('rest')}</p>
 
       <div className="relative flex items-center justify-center">
         <svg width="100" height="100" className="-rotate-90">
@@ -55,7 +57,7 @@ export function RestTimer() {
         onClick={skipRestTimer}
         className="flex min-h-[44px] w-full items-center justify-center rounded-lg bg-gym-border px-4 text-sm font-semibold"
       >
-        Skip Rest
+        {t('skipRest')}
       </button>
     </div>
   )

@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useI18n } from '@/i18n/client'
 import { SessionSummary } from '@/modules/workout-session/components/SessionSummary'
 import type { FinishedSession } from '@/modules/workout-session/types'
 
 export default function SummaryPage() {
+  const { t } = useI18n()
   const router = useRouter()
   const [session, setSession] = useState<FinishedSession | null>(null)
   const [checked, setChecked] = useState(false)
@@ -28,7 +30,7 @@ export default function SummaryPage() {
   if (!checked || !session) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <span className="text-sm text-gym-muted">Loading…</span>
+        <span className="text-sm text-gym-muted">{t('loading')}</span>
       </div>
     )
   }

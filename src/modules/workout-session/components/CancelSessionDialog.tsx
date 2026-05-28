@@ -1,5 +1,7 @@
 'use client'
 
+import { useI18n } from '@/i18n/client'
+
 interface CancelSessionDialogProps {
   title: string
   message: string
@@ -15,6 +17,7 @@ export function CancelSessionDialog({
   onConfirm,
   onCancel,
 }: CancelSessionDialogProps) {
+  const { t } = useI18n()
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 px-4 pb-8">
       <div className="w-full max-w-sm rounded-2xl border border-gym-border bg-gym-surface p-6">
@@ -33,7 +36,7 @@ export function CancelSessionDialog({
             onClick={onCancel}
             className="flex min-h-[44px] w-full items-center justify-center rounded-lg border border-gym-border text-sm"
           >
-            Cancel
+            {t('cancel')}
           </button>
         </div>
       </div>

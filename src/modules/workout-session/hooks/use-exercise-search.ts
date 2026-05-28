@@ -2,6 +2,9 @@
 
 import { useQuery } from '@tanstack/react-query'
 import exercisesJson from '@/data/exercises/exercises.json'
+import type { Language } from '@/i18n/config'
+import { defaultLanguage } from '@/i18n/config'
+import { getLocalizedExerciseName } from '@/i18n/exercise-names'
 
 export interface ExerciseSearchResult {
   id: string
@@ -19,6 +22,7 @@ export interface ExerciseSearchOptions {
   equipment?: string
   page?: number
   pageSize?: number
+  lang?: Language
 }
 
 export interface ExerciseSearchPage {
@@ -33,13 +37,16 @@ export const BODY_PARTS = [...new Set(ALL_EXERCISES.map((e) => e.bodyPart))].sor
 export const EQUIPMENT_OPTIONS = [...new Set(ALL_EXERCISES.map((e) => e.equipment))].sort()
 
 function searchExercises(opts: Required<ExerciseSearchOptions>): ExerciseSearchPage {
-  const { query, bodyPart, equipment, page, pageSize } = opts
+  const { query, bodyPart, equipment, page, pageSize, lang } = opts
 
   let results = ALL_EXERCISES
 
   if (query) {
     const q = query.toLowerCase()
-    results = results.filter((e) => e.name.toLowerCase().includes(q))
+    results = results.filter((e) => {
+      const localizedName = getLocalizedExerciseName(e.name, lang).toLowerCase()
+      return e.name.toLowerCase().includes(q) || localizedName.includes(q)
+    })
   }
   if (bodyPart) {
     results = results.filter((e) => e.bodyPart === bodyPart)
@@ -58,11 +65,11 @@ function searchExercises(opts: Required<ExerciseSearchOptions>): ExerciseSearchP
 }
 
 export function useExerciseSearch(options: ExerciseSearchOptions = {}) {
-  const { query = '', bodyPart = '', equipment = '', page = 0, pageSize = 20 } = options
+  const { query = '', bodyPart = '', equipment = '', page = 0, pageSize = 20, lang = defaultLanguage } = options
 
   return useQuery({
-    queryKey: ['exercise-search', query, bodyPart, equipment, page, pageSize],
-    queryFn: () => searchExercises({ query, bodyPart, equipment, page, pageSize }),
+    queryKey: ['exercise-search', query, bodyPart, equipment, page, pageSize, lang],
+    queryFn: () => searchExercises({ query, bodyPart, equipment, page, pageSize, lang }),
     staleTime: Infinity,
   })
 }

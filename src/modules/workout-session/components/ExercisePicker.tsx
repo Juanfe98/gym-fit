@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
+import { useI18n } from '@/i18n/client'
+import { getEquipmentLabel, getMuscleLabel } from '@/i18n/content'
+import { getLocalizedExerciseName } from '@/i18n/exercise-names'
 import { useExerciseSearch, BODY_PARTS } from '../hooks/use-exercise-search'
 import type { ExerciseSearchResult } from '../hooks/use-exercise-search'
 
@@ -16,6 +19,7 @@ interface ExercisePickerProps {
 }
 
 export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
+  const { lang, t } = useI18n()
   const [inputValue, setInputValue] = useState('')
   const [query, setQuery] = useState('')
   const [bodyPart, setBodyPart] = useState('')
@@ -25,7 +29,7 @@ export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
     return () => clearTimeout(t)
   }, [inputValue])
 
-  const { data, isLoading } = useExerciseSearch({ query, bodyPart, pageSize: 30 })
+  const { data, isLoading } = useExerciseSearch({ query, bodyPart, pageSize: 30, lang })
 
   function handleSelect(exercise: ExerciseSearchResult) {
     onSelect({ exerciseId: exercise.id, exerciseNameSnapshot: exercise.name })
@@ -40,13 +44,13 @@ export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
           type="button"
           onClick={onClose}
           className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gym-muted transition-colors hover:text-gym-text"
-          aria-label="Close"
+          aria-label={t('close')}
         >
           <X className="h-5 w-5" />
         </button>
         <input
           type="search"
-          placeholder="Search exercises…"
+          placeholder={t('searchExercises')}
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           autoFocus
@@ -63,7 +67,7 @@ export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
             bodyPart === '' ? 'bg-orange-500 text-white' : 'bg-gym-surface text-gym-muted'
           }`}
         >
-          All
+          {t('all')}
         </button>
         {BODY_PARTS.map((bp) => (
           <button
@@ -74,7 +78,7 @@ export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
               bodyPart === bp ? 'bg-orange-500 text-white' : 'bg-gym-surface text-gym-muted'
             }`}
           >
-            {bp}
+            {getMuscleLabel(bp, lang)}
           </button>
         ))}
       </div>
@@ -82,11 +86,11 @@ export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
       {/* Results */}
       <div className="flex-1 overflow-y-auto">
         {isLoading && (
-          <p className="px-4 py-6 text-center text-sm text-gym-muted">Loading…</p>
+          <p className="px-4 py-6 text-center text-sm text-gym-muted">{t('loading')}</p>
         )}
 
         {!isLoading && data?.exercises.length === 0 && (
-          <p className="px-4 py-6 text-center text-sm text-gym-muted">No exercises found</p>
+          <p className="px-4 py-6 text-center text-sm text-gym-muted">{t('noExercisesFound')}</p>
         )}
 
         {data?.exercises.map((exercise) => (
@@ -96,16 +100,16 @@ export function ExercisePicker({ onSelect, onClose }: ExercisePickerProps) {
             onClick={() => handleSelect(exercise)}
             className="flex min-h-[44px] w-full flex-col items-start justify-center gap-0.5 border-b border-gym-border px-4 py-3 text-left transition-colors hover:bg-gym-surface-2 active:bg-gym-surface-3"
           >
-            <span className="text-sm font-medium capitalize">{exercise.name}</span>
+            <span className="text-sm font-medium capitalize">{getLocalizedExerciseName(exercise.name, lang)}</span>
             <span className="text-xs capitalize text-gym-muted">
-              {exercise.bodyPart} · {exercise.equipment}
+              {getMuscleLabel(exercise.bodyPart, lang)} · {getEquipmentLabel(exercise.equipment, lang)}
             </span>
           </button>
         ))}
 
         {data && data.hasMore && (
           <p className="px-4 py-3 text-center text-xs text-gym-muted">
-            Showing 30 of {data.total} — refine search to narrow results
+            {t('showingExerciseResults', { total: data.total })}
           </p>
         )}
       </div>

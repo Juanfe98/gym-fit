@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Pencil, X } from 'lucide-react'
+import { useI18n } from '@/i18n/client'
 import { useWorkoutSessionStore } from '../stores/workout-session-store'
 import { SetLogForm } from './SetLogForm'
 import { PrBadge } from './PrBadge'
@@ -21,6 +22,7 @@ interface SetLogRowProps {
 }
 
 export function SetLogRow({ set, isNew = false }: SetLogRowProps) {
+  const { t } = useI18n()
   const editSet = useWorkoutSessionStore((s) => s.editSet)
   const deleteSet = useWorkoutSessionStore((s) => s.deleteSet)
   const [editing, setEditing] = useState(false)
@@ -52,14 +54,14 @@ export function SetLogRow({ set, isNew = false }: SetLogRowProps) {
             rpe: set.rpe,
             notes: set.notes,
           }}
-          submitLabel="Save"
+          submitLabel={t('save')}
         />
         <button
           type="button"
           onClick={() => setEditing(false)}
           className="w-full py-2 text-sm text-gym-muted"
         >
-          Cancel
+          {t('cancel')}
         </button>
       </div>
     )
@@ -70,7 +72,7 @@ export function SetLogRow({ set, isNew = false }: SetLogRowProps) {
       <span className="w-6 text-sm text-gym-muted">{set.setNumber}</span>
 
       <span className="flex-1 text-sm">
-        {set.weight > 0 ? `${displayWeight} ${displayUnit}` : '—'} × {set.reps} reps
+        {set.weight > 0 ? `${displayWeight} ${displayUnit}` : '—'} × {set.reps} {t('reps').toLowerCase()}
       </span>
 
       <span className="rounded bg-gym-surface px-1.5 py-0.5 text-xs text-gym-muted">
@@ -87,7 +89,7 @@ export function SetLogRow({ set, isNew = false }: SetLogRowProps) {
         type="button"
         onClick={() => setEditing(true)}
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gym-muted transition-colors hover:text-gym-text"
-        aria-label="Edit set"
+        aria-label={t('editSet')}
       >
         <Pencil className="h-4 w-4" />
       </button>
@@ -96,7 +98,7 @@ export function SetLogRow({ set, isNew = false }: SetLogRowProps) {
         type="button"
         onClick={handleDelete}
         className="flex min-h-[44px] min-w-[44px] items-center justify-center text-red-400 transition-colors hover:text-red-300"
-        aria-label="Delete set"
+        aria-label={t('deleteSet')}
       >
         <X className="h-4 w-4" />
       </button>

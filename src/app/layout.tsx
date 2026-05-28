@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Barlow, Barlow_Condensed } from 'next/font/google'
 import '@/styles/global.css'
+import { I18nProvider, LanguageSwitcher } from '@/i18n/client'
 
 const barlow = Barlow({
   subsets: ['latin'],
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
     template: '%s | Gym Planner',
     default: 'Gym Planner',
   },
-  description: 'Track workouts, build plans, monitor progress.',
+  description: 'Track workouts, build plans, monitor progress. / Registra entrenamientos, crea planes y monitorea tu progreso.',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
@@ -41,7 +42,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${barlow.variable} ${barlowCondensed.variable}`}>
-      <body>{children}</body>
+      <body>
+        <I18nProvider>
+          <LanguageSwitcher />
+          {children}
+        </I18nProvider>
+      </body>
     </html>
   )
 }

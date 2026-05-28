@@ -4,9 +4,11 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Dumbbell } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import { useI18n } from '@/i18n/client'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { t } = useI18n()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -40,7 +42,7 @@ export default function LoginPage() {
           </div>
           <div className="flex flex-col items-center gap-1">
             <h1 className="heading text-3xl tracking-wide text-gym-text">Gym Planner</h1>
-            <p className="text-sm text-gym-muted">Track. Lift. Progress.</p>
+            <p className="text-sm text-gym-muted">{t('loginTagline')}</p>
           </div>
         </div>
 
@@ -55,7 +57,7 @@ export default function LoginPage() {
           <div className="flex flex-col gap-3">
             <input
               type="email"
-              placeholder="Email"
+              placeholder={t('email')}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -64,7 +66,7 @@ export default function LoginPage() {
 
             <input
               type="password"
-              placeholder="Password"
+              placeholder={t('password')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -77,7 +79,7 @@ export default function LoginPage() {
             disabled={loading}
             className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
           >
-            {loading ? 'Signing in…' : 'Sign in'}
+            {loading ? t('signingIn') : t('signIn')}
           </button>
         </form>
       </div>

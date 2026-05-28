@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useWorkoutSessionStore } from '@/modules/workout-session/stores/workout-session-store'
+import { useI18n } from '@/i18n/client'
 import { CancelSessionDialog } from '@/modules/workout-session/components/CancelSessionDialog'
 
 export default function WorkoutLayout({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n()
   const session = useWorkoutSessionStore((s) => s.session)
   const discardSession = useWorkoutSessionStore((s) => s.discardSession)
   const router = useRouter()
@@ -48,9 +50,9 @@ export default function WorkoutLayout({ children }: { children: React.ReactNode 
       {children}
       {showDialog && (
         <CancelSessionDialog
-          title="Discard workout?"
-          message="All logged sets will be lost. This session will not be saved."
-          confirmLabel="Discard Workout"
+          title={t('discardWorkoutTitle')}
+          message={t('discardWorkoutMessage')}
+          confirmLabel={t('discardWorkout')}
           onConfirm={handleConfirmDiscard}
           onCancel={() => setShowDialog(false)}
         />

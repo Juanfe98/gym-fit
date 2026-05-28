@@ -2,6 +2,8 @@
 
 import { useState } from 'react'
 import { GripVertical, MoreHorizontal } from 'lucide-react'
+import { useI18n } from '@/i18n/client'
+import { getLocalizedExerciseName } from '@/i18n/exercise-names'
 import { useSortable } from '@dnd-kit/sortable'
 import { useWorkoutSessionStore } from '../stores/workout-session-store'
 import { useTimerStore } from '../stores/timer-store'
@@ -19,6 +21,7 @@ interface ExerciseRowProps {
 }
 
 export function ExerciseRow({ exercise }: ExerciseRowProps) {
+  const { lang, t } = useI18n()
   const addSetToExercise = useWorkoutSessionStore((s) => s.logSet)
   const removeExercise = useWorkoutSessionStore((s) => s.removeExercise)
   const replaceExercise = useWorkoutSessionStore((s) => s.replaceExercise)
@@ -77,14 +80,14 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
         <button
           type="button"
           className="flex min-h-[44px] min-w-[44px] cursor-grab items-center justify-center text-gym-muted active:cursor-grabbing"
-          aria-label="Drag to reorder"
+          aria-label={t('dragToReorder')}
           {...attributes}
           {...listeners}
         >
           <GripVertical className="h-5 w-5" />
         </button>
 
-        <span className="flex-1 font-semibold capitalize">{exercise.exerciseNameSnapshot}</span>
+        <span className="flex-1 font-semibold capitalize">{getLocalizedExerciseName(exercise.exerciseNameSnapshot, lang)}</span>
 
         {/* Menu */}
         <div className="relative">
@@ -92,7 +95,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
             type="button"
             onClick={() => setMenuOpen((v) => !v)}
             className="flex min-h-[44px] min-w-[44px] items-center justify-center text-gym-muted transition-colors hover:text-gym-text"
-            aria-label="Exercise options"
+            aria-label={t('exerciseOptions')}
           >
             <MoreHorizontal className="h-5 w-5" />
           </button>
@@ -103,7 +106,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
                 className="px-4 py-3 text-left text-sm transition-colors hover:bg-gym-surface-2"
                 onClick={() => { setShowReplacePicker(true); setMenuOpen(false) }}
               >
-                Replace
+                {t('replace')}
               </button>
               <div className="mx-3 border-t border-gym-border-subtle" />
               <button
@@ -111,7 +114,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
                 className="px-4 py-3 text-left text-sm text-red-400 transition-colors hover:bg-red-500/10"
                 onClick={() => { setShowRemoveDialog(true); setMenuOpen(false) }}
               >
-                Remove
+                {t('remove')}
               </button>
             </div>
           )}
@@ -120,7 +123,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 
       {/* Sets */}
       {exercise.sets.length === 0 && (
-        <p className="px-3 py-2 text-sm text-gym-muted">Log your first set</p>
+        <p className="px-3 py-2 text-sm text-gym-muted">{t('logFirstSet')}</p>
       )}
       {exercise.sets.map((set) => (
         <SetLogRow key={set.id} set={set} isNew={set.id === latestPrSetId} />
@@ -146,7 +149,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
             onClick={() => setShowAddSet(false)}
             className="w-full py-2 text-sm text-gym-muted"
           >
-            Cancel
+            {t('cancel')}
           </button>
         </div>
       ) : (
@@ -155,7 +158,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
           onClick={() => setShowAddSet(true)}
           className="flex min-h-[44px] w-full items-center justify-center gap-1 text-sm text-gym-accent transition-colors hover:bg-gym-accent-subtle"
         >
-          + Add Set
+          + {t('addSet')}
         </button>
       )}
 
@@ -163,7 +166,7 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
       <div className="px-3 pb-3">
         <input
           type="text"
-          placeholder="Exercise notes…"
+          placeholder={t('exerciseNotes')}
           defaultValue={exercise.notes ?? ''}
           onBlur={(e) => updateExerciseNotes(exercise.id, e.target.value)}
           className="h-9 w-full rounded border border-gym-border bg-transparent px-2 text-sm text-gym-muted"
@@ -179,9 +182,9 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 
       {pendingReplaceRef && (
         <CancelSessionDialog
-          title="Replace exercise?"
-          message={`"${exercise.exerciseNameSnapshot}" and all its logged sets will be removed and replaced with "${pendingReplaceRef.exerciseNameSnapshot}".`}
-          confirmLabel="Replace"
+          title={t('replaceExerciseTitle')}
+          message={t('replaceExerciseMessage', { current: getLocalizedExerciseName(exercise.exerciseNameSnapshot, lang), next: getLocalizedExerciseName(pendingReplaceRef.exerciseNameSnapshot, lang) })}
+          confirmLabel={t('replace')}
           onConfirm={handleReplaceConfirm}
           onCancel={() => setPendingReplaceRef(null)}
         />
@@ -189,9 +192,9 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
 
       {showRemoveDialog && (
         <CancelSessionDialog
-          title="Remove exercise?"
-          message={`"${exercise.exerciseNameSnapshot}" and all its logged sets will be removed from this session.`}
-          confirmLabel="Remove"
+          title={t('removeExerciseTitle')}
+          message={t('removeExerciseMessage', { exercise: getLocalizedExerciseName(exercise.exerciseNameSnapshot, lang) })}
+          confirmLabel={t('remove')}
           onConfirm={handleRemoveConfirm}
           onCancel={() => setShowRemoveDialog(false)}
         />

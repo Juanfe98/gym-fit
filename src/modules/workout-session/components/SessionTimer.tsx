@@ -1,6 +1,7 @@
 'use client'
 
 import { Play, Pause } from 'lucide-react'
+import { useI18n } from '@/i18n/client'
 import { useTimerStore } from '../stores/timer-store'
 
 function formatElapsed(seconds: number): string {
@@ -13,6 +14,7 @@ function formatElapsed(seconds: number): string {
 }
 
 export function SessionTimer() {
+  const { t } = useI18n()
   const elapsedSeconds = useTimerStore((s) => s.elapsedSeconds)
   const pauseSessionTimer = useTimerStore((s) => s.pauseSessionTimer)
   const resumeSessionTimer = useTimerStore((s) => s.resumeSessionTimer)
@@ -32,7 +34,7 @@ export function SessionTimer() {
       type="button"
       onClick={handleToggle}
       className="flex min-h-[44px] min-w-[44px] items-center gap-1 rounded px-2 py-1"
-      aria-label={isPaused ? 'Resume timer' : 'Pause timer'}
+      aria-label={isPaused ? t('resumeTimer') : t('pauseTimer')}
     >
       <span className="font-mono text-lg font-semibold tabular-nums">
         {formatElapsed(elapsedSeconds)}

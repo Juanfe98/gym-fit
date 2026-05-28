@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Trophy } from 'lucide-react'
+import { useI18n } from '@/i18n/client'
+import { getLocalizedExerciseName } from '@/i18n/exercise-names'
 import { syncCompletedSession } from '../services/session-supabase'
 import { finishedSessionToPayload } from '../utils/session-payload'
 import type { FinishedSession } from '../types'
@@ -21,6 +23,7 @@ function formatDuration(seconds: number): string {
 }
 
 export function SessionSummary({ session: initialSession }: SessionSummaryProps) {
+  const { lang, t } = useI18n()
   const router = useRouter()
   const [notes, setNotes] = useState(initialSession.notes ?? '')
   const [saving, setSaving] = useState(false)
@@ -33,7 +36,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
     setError(null)
     const result = await syncCompletedSession(finishedSessionToPayload(session))
     if (!result.success) {
-      setError(result.error ?? 'Sync failed')
+      setError(result.error ?? t('syncFailed'))
       setSaving(false)
       return
     }
@@ -43,16 +46,16 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
 
   return (
     <div className="flex flex-col gap-6 px-4 py-6">
-      <h1 className="heading text-3xl text-gym-text">Workout Complete</h1>
+      <h1 className="heading text-3xl text-gym-text">{t('workoutComplete')}</h1>
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3">
-        <Stat label="Duration" value={formatDuration(initialSession.durationSeconds)} />
-        <Stat label="Volume" value={`${Math.round(initialSession.totalVolume)} kg`} />
-        <Stat label="Exercises" value={String(initialSession.exercises.length)} />
-        <Stat label="Sets" value={String(initialSession.exercises.reduce((n, e) => n + e.sets.length, 0))} />
+        <Stat label={t('duration')} value={formatDuration(initialSession.durationSeconds)} />
+        <Stat label={t('volume')} value={`${Math.round(initialSession.totalVolume)} kg`} />
+        <Stat label={t('exercises')} value={String(initialSession.exercises.length)} />
+        <Stat label={t('sets')} value={String(initialSession.exercises.reduce((n, e) => n + e.sets.length, 0))} />
         {initialSession.prCount > 0 && (
-          <Stat label="PRs" value={String(initialSession.prCount)} highlight />
+          <Stat label={t('prs')} value={String(initialSession.prCount)} highlight />
         )}
       </div>
 
@@ -60,8 +63,8 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
       <div className="flex flex-col gap-2">
         {initialSession.exercises.map((ex) => (
           <div key={ex.id} className="rounded border border-gym-border bg-gym-surface px-3 py-2">
-            <p className="text-sm font-medium capitalize">{ex.exerciseNameSnapshot}</p>
-            <p className="text-xs text-gym-muted">{ex.sets.length} set{ex.sets.length !== 1 ? 's' : ''}</p>
+            <p className="text-sm font-medium capitalize">{getLocalizedExerciseName(ex.exerciseNameSnapshot, lang)}</p>
+            <p className="text-xs text-gym-muted">{t(ex.sets.length === 1 ? 'setCount' : 'setCountPlural', { count: ex.sets.length })}</p>
           </div>
         ))}
       </div>
@@ -71,13 +74,13 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
         <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-3">
           <div className="mb-2 flex items-center gap-2">
             <Trophy className="h-4 w-4 text-yellow-400" />
-            <p className="text-sm font-semibold text-yellow-400">Personal Records</p>
+            <p className="text-sm font-semibold text-yellow-400">{t('personalRecords')}</p>
           </div>
           {initialSession.exercises
             .flatMap((ex) => ex.sets.filter((s) => s.isPr).map((s) => ({ ex, s })))
             .map(({ ex, s }) => (
               <p key={s.id} className="text-xs text-gym-muted">
-                {ex.exerciseNameSnapshot} — {s.weight} {s.weightUnit}
+                {getLocalizedExerciseName(ex.exerciseNameSnapshot, lang)} — {s.weight} {s.weightUnit}
               </p>
             ))}
         </div>
@@ -87,7 +90,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
       <textarea
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
-        placeholder="Session notes…"
+        placeholder={t('sessionNotes')}
         rows={3}
         className="w-full rounded border border-gym-border bg-gym-surface px-3 py-2 text-sm"
       />
@@ -100,7 +103,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
         disabled={saving}
         className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
       >
-        {saving ? 'Saving…' : 'Save & Done'}
+        {saving ? t('saving') : t('saveAndDone')}
       </button>
     </div>
   )
