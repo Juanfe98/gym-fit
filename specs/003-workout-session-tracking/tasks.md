@@ -86,25 +86,25 @@
 
 ### Exercise Search Hook
 
-- [ ] T023 Create `src/modules/workout-session/hooks/use-exercise-search.ts` — TanStack Query hook that reads exercises from `src/data/exercises/catalog.ts` (static catalog); filters by name/muscle/equipment; returns paginated results; no Supabase call needed for base catalog
+- [x] T023 Create `src/modules/workout-session/hooks/use-exercise-search.ts` — TanStack Query hook that reads exercises from `src/data/exercises/catalog.ts` (static catalog); filters by name/muscle/equipment; returns paginated results; no Supabase call needed for base catalog
 
 ### Active Workout Screen
 
-- [ ] T024 Create `src/modules/workout-session/components/SessionTimer.tsx` — displays elapsed session time (HH:MM:SS) reading from `timer-store`; updates every second; 44px tap target for pause/resume
-- [ ] T025 [P] [US1] Create `src/modules/workout-session/components/SetLogForm.tsx` — inline form with weight input, reps input, set type selector (Normal/Warm-up/Drop Set), optional notes; uses Zod schema from T014 for validation; shows field-level errors; submits by tapping "Add Set"; minimum 44px input height
-- [ ] T026 [P] [US1] Create `src/modules/workout-session/components/SyncStatusBar.tsx` — thin indicator bar showing sync status ('synced' = hidden, 'pending_sync' = amber dot + "Saving…", 'sync_failed' = red + "Sync failed"); reads from `offline-queue-store`
-- [ ] T027 [US1] Create `src/modules/workout-session/components/SetLogRow.tsx` — displays a single logged set (set number, weight + unit, reps, set type badge); includes edit and delete actions (swipe or button menu); calls `editSet` / `deleteSet` on store; 44px tap target
-- [ ] T028 [US1] Create `src/modules/workout-session/components/ExercisePicker.tsx` — full-screen search modal; uses `use-exercise-search` hook; search input with debounce; muscle group filter chips; exercise list with tap-to-select; closes modal and calls `addExercise` on store
-- [ ] T029 [US1] Create `src/modules/workout-session/components/ExerciseRow.tsx` — card for one session exercise; shows exercise name, set list (using `SetLogRow`), add-set button (opens `SetLogForm`), exercise notes input, reorder handle, replace/remove menu; reads from session store
-- [ ] T030 [US1] Create `src/modules/workout-session/components/ExerciseList.tsx` — ordered list of `ExerciseRow` components; implements drag-and-drop reorder using `@dnd-kit/sortable`; calls `reorderExercises` on store on drop
-- [ ] T031 [US1] Create `src/modules/workout-session/components/ActiveWorkoutScreen.tsx` — top-level session UI shell; header with `SessionTimer` and finish/cancel buttons; `SyncStatusBar`; `ExerciseList`; floating "Add Exercise" button that opens `ExercisePicker`; reads active session from store; empty state when no exercises added yet
-- [ ] T032 [US1] Create `src/app/(app)/workout/page.tsx` — Client Component; on mount checks Dexie for in-progress session (crash recovery — offers resume or discard dialog if found); otherwise shows "Start Workout" button which calls `startSession` and renders `ActiveWorkoutScreen`
+- [x] T024 Create `src/modules/workout-session/components/SessionTimer.tsx` — displays elapsed session time (HH:MM:SS) reading from `timer-store`; updates every second; 44px tap target for pause/resume
+- [x] T025 [P] [US1] Create `src/modules/workout-session/components/SetLogForm.tsx` — inline form with weight input, reps input, set type selector (Normal/Warm-up/Drop Set), optional notes; uses Zod schema from T014 for validation; shows field-level errors; submits by tapping "Add Set"; minimum 44px input height
+- [x] T026 [P] [US1] Create `src/modules/workout-session/components/SyncStatusBar.tsx` — thin indicator bar showing sync status ('synced' = hidden, 'pending_sync' = amber dot + "Saving…", 'sync_failed' = red + "Sync failed"); reads from `offline-queue-store`
+- [x] T027 [US1] Create `src/modules/workout-session/components/SetLogRow.tsx` — displays a single logged set (set number, weight + unit, reps, set type badge); includes edit and delete actions (swipe or button menu); calls `editSet` / `deleteSet` on store; 44px tap target
+- [x] T028 [US1] Create `src/modules/workout-session/components/ExercisePicker.tsx` — full-screen search modal; uses `use-exercise-search` hook; search input with debounce; muscle group filter chips; exercise list with tap-to-select; closes modal and calls `addExercise` on store
+- [x] T029 [US1] Create `src/modules/workout-session/components/ExerciseRow.tsx` — card for one session exercise; shows exercise name, set list (using `SetLogRow`), add-set button (opens `SetLogForm`), exercise notes input, reorder handle, replace/remove menu; reads from session store
+- [x] T030 [US1] Create `src/modules/workout-session/components/ExerciseList.tsx` — ordered list of `ExerciseRow` components; implements drag-and-drop reorder using `@dnd-kit/sortable`; calls `reorderExercises` on store on drop
+- [x] T031 [US1] Create `src/modules/workout-session/components/ActiveWorkoutScreen.tsx` — top-level session UI shell; header with `SessionTimer` and finish/cancel buttons; `SyncStatusBar`; `ExerciseList`; floating "Add Exercise" button that opens `ExercisePicker`; reads active session from store; empty state when no exercises added yet
+- [x] T032 [US1] Create `src/app/(app)/workout/page.tsx` — Client Component; on mount checks Dexie for in-progress session (crash recovery — offers resume or discard dialog if found); otherwise shows "Start Workout" button which calls `startSession` and renders `ActiveWorkoutScreen`
 
 ### Session Summary
 
-- [ ] T033 [US1] Create `src/modules/workout-session/services/session-supabase.ts` — `syncCompletedSession(payload)` Server Action implementing contract in `contracts/server-actions.ts`; upserts `workout_sessions`, `session_exercises`, `set_logs`, and `personal_records` rows in a single Supabase transaction; uses server Supabase client
-- [ ] T034 [US1] Create `src/modules/workout-session/components/SessionSummary.tsx` — displays finished session data: duration, total volume (using `calculateTotalVolume`), exercise count, per-exercise set counts, PR count; session notes textarea; "Save & Done" button that calls `syncCompletedSession` then navigates to history
-- [ ] T035 [US1] Create `src/app/(app)/workout/summary/page.tsx` — renders `SessionSummary` with finished session data passed via router state or Dexie lookup; redirects to `/workout` if no finished session found
+- [x] T033 [US1] Create `src/modules/workout-session/services/session-supabase.ts` — `syncCompletedSession(payload)` Server Action implementing contract in `contracts/server-actions.ts`; upserts `workout_sessions`, `session_exercises`, `set_logs`, and `personal_records` rows in a single Supabase transaction; uses server Supabase client
+- [x] T034 [US1] Create `src/modules/workout-session/components/SessionSummary.tsx` — displays finished session data: duration, total volume (using `calculateTotalVolume`), exercise count, per-exercise set counts, PR count; session notes textarea; "Save & Done" button that calls `syncCompletedSession` then navigates to history
+- [x] T035 [US1] Create `src/app/(app)/workout/summary/page.tsx` — renders `SessionSummary` with finished session data passed via router state or Dexie lookup; redirects to `/workout` if no finished session found
 
 **Checkpoint**: Full session loop works end-to-end. Session appears in Supabase `workout_sessions` table after "Save & Done".
 
