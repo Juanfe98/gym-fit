@@ -1,8 +1,11 @@
 # Dependencies
 node_modules/
 
-# Build output
-dist/
+# Next.js build output
+.next/
+out/
+
+# Vercel
 .vercel/
 
 # Environment — never commit secrets
@@ -10,10 +13,12 @@ dist/
 .env.local
 .env.*.local
 
-# Astro
-.astro/
-
 # OS
 .DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
 
 # NOTE: src/data/exercises/exercises.json is intentionally NOT ignored — commit it.

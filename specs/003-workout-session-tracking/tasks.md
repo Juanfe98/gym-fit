@@ -20,7 +20,7 @@
 
 > ⚠️ Current repo is Astro. These tasks create the Next.js project foundation before any feature work.
 
-- [ ] T001 Scaffold Next.js 15+ project with `--typescript --tailwind --app --src-dir --import-alias "@/*"`, preserving `src/data/` and `src/services/exercisedb.ts` from the existing Astro project
+- [x] T001 Scaffold Next.js 15+ project with `--typescript --tailwind --app --src-dir --import-alias "@/*"`, preserving `src/data/` and `src/services/exercisedb.ts` from the existing Astro project
 - [ ] T002 Install locked dependencies: `@supabase/ssr @supabase/supabase-js dexie dexie-react-hooks zustand @tanstack/react-query @hookform/resolvers react-hook-form zod @dnd-kit/core @dnd-kit/sortable`
 - [ ] T003 [P] Configure TypeScript strict mode in `tsconfig.json` (strict: true, paths alias `@/*`)
 - [ ] T004 [P] Configure Tailwind CSS v4 in `src/styles/global.css` with `@theme` tokens (colors, spacing, typography) matching mobile-first design system
