@@ -1,9 +1,13 @@
 # Dependencies
 node_modules/
 
-# Next.js build output
+# Build output
+dist/
 .next/
 out/
+
+# Astro (legacy)
+.astro/
 
 # Vercel
 .vercel/
