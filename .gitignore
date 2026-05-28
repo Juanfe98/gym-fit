@@ -25,4 +25,7 @@ Thumbs.db
 *.tsbuildinfo
 next-env.d.ts
 
+# Supabase CLI link artifacts
+supabase/.temp/
+
 # NOTE: src/data/exercises/exercises.json is intentionally NOT ignored — commit it.
