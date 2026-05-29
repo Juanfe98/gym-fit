@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { useI18n } from '@/i18n/client'
-import { AuthFormWrapper } from '@/modules/auth'
+import { AuthFormWrapper, AuthSubmitButton } from '@/modules/auth'
 
 type ResendStatus = 'idle' | 'sending' | 'sent' | 'error'
 
@@ -38,19 +38,19 @@ export default function VerifyEmailPage() {
             placeholder={t('email')}
             className="h-11 rounded-lg border border-gym-border bg-gym-surface px-3 text-sm focus:border-gym-border-strong focus:outline-none"
           />
-          <button
+          <AuthSubmitButton
             type="button"
-            disabled={resendStatus === 'sending' || !email}
+            loading={resendStatus === 'sending'}
+            disabled={!email}
             onClick={handleResend}
-            className="h-11 rounded-lg bg-gym-accent font-semibold text-white disabled:opacity-50"
           >
             {resendStatus === 'sending' ? t('resendingEmail') : t('resendEmail')}
-          </button>
+          </AuthSubmitButton>
           {resendStatus === 'sent' && (
             <p role="alert" className="text-center text-sm text-gym-muted">{t('emailResentConfirm')}</p>
           )}
           {resendStatus === 'error' && (
-            <p role="alert" className="text-center text-sm text-red-400">{t('authNetworkError')}</p>
+            <p role="alert" className="text-center text-sm text-danger">{t('authNetworkError')}</p>
           )}
         </div>
         <Link href="/login" className="text-center text-sm text-gym-accent hover:underline">

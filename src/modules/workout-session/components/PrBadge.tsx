@@ -21,12 +21,12 @@ export function PrBadge({ isNew = false }: PrBadgeProps) {
 
   return (
     <>
-      <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/20 px-2 py-0.5 text-xs font-medium text-yellow-400">
+      <span className="bg-pr-subtle text-pr inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold">
         <Trophy className="h-3 w-3" />
         {t('personalRecordAbbr')}
       </span>
       {toastVisible && (
-        <div className="fixed left-4 right-4 top-16 z-50 flex items-center justify-center gap-2 rounded-lg bg-yellow-500 px-4 py-3 text-sm font-semibold text-white shadow-lg">
+        <div className="fixed left-4 right-4 top-16 z-50 flex items-center justify-center gap-2 rounded-lg bg-gym-pr px-4 py-3 text-sm font-semibold text-gym-bg shadow-lg">
           <Trophy className="h-4 w-4" />
           {t('newPersonalRecord')}
         </div>

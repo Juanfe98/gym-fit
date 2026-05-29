@@ -41,16 +41,31 @@ export function MuscleDiagram({ primaryMuscle, secondaryMuscles }: MuscleDiagram
   }, [primaryMuscle, secondaryMuscles])
 
   return (
-    <div
-      className="flex gap-4 justify-center"
-      aria-label={t('musclesDiagram')}
-      role="img"
-    >
-      <div ref={frontRef} className="w-1/2 max-w-[140px]">
-        <FrontBodySvg />
+    <div className="flex flex-col gap-3">
+      <div
+        className="flex justify-center gap-4"
+        aria-label={t('musclesDiagram')}
+        role="img"
+      >
+        <div ref={frontRef} className="w-1/2 max-w-[140px]">
+          <FrontBodySvg />
+        </div>
+        <div ref={backRef} className="w-1/2 max-w-[140px]">
+          <BackBodySvg />
+        </div>
       </div>
-      <div ref={backRef} className="w-1/2 max-w-[140px]">
-        <BackBodySvg />
+      <div className="flex justify-center gap-4 text-xs text-gym-muted">
+        <span className="flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-full bg-gym-accent" aria-hidden="true" />
+          {t('musclePrimaryLegend')}
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span
+            className="h-2.5 w-2.5 rounded-full bg-gym-accent opacity-40"
+            aria-hidden="true"
+          />
+          {t('muscleSecondaryLegend')}
+        </span>
       </div>
     </div>
   )

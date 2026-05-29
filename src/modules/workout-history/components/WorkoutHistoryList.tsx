@@ -1,5 +1,6 @@
 'use client'
 
+import { useI18n } from '@/i18n/client'
 import { useHistoryList } from '../hooks/use-history-list'
 import { useExerciseNameSearch } from '../hooks/use-exercise-name-search'
 import { useHistoryFilterStore } from '../stores/history-filter-store'
@@ -15,6 +16,7 @@ interface WorkoutHistoryListProps {
 }
 
 export function WorkoutHistoryList({ userId, initialData }: WorkoutHistoryListProps) {
+  const { t } = useI18n()
   const dateRange = useHistoryFilterStore((s) => s.dateRange)
   const exerciseSearch = useHistoryFilterStore((s) => s.exerciseSearch)
   const clearFilters = useHistoryFilterStore((s) => s.clearFilters)
@@ -53,9 +55,9 @@ export function WorkoutHistoryList({ userId, initialData }: WorkoutHistoryListPr
               type="button"
               onClick={() => fetchNextPage()}
               disabled={isFetchingNextPage}
-              className="min-h-[44px] w-full rounded border border-gym-border text-sm text-gym-muted disabled:opacity-50"
+              className="min-h-[44px] w-full rounded-lg border border-gym-border text-sm font-medium text-gym-muted transition-colors active:bg-gym-surface-2 disabled:opacity-50"
             >
-              {isFetchingNextPage ? 'Loading…' : 'Load more'}
+              {isFetchingNextPage ? t('loading') : t('loadMore')}
             </button>
           )}
         </div>

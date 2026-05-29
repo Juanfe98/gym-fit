@@ -71,8 +71,14 @@ export function SetLogRow({ set, isNew = false }: SetLogRowProps) {
     <div className="flex min-h-[44px] items-center gap-3 px-3 py-2">
       <span className="w-6 text-sm text-gym-muted">{set.setNumber}</span>
 
-      <span className="flex-1 text-sm">
-        {set.weight > 0 ? `${displayWeight} ${displayUnit}` : '—'} × {set.reps} {t('reps').toLowerCase()}
+      <span className="flex flex-1 items-baseline gap-1 text-sm text-gym-muted">
+        <span className="metric text-base text-gym-text">
+          {set.weight > 0 ? displayWeight : '—'}
+        </span>
+        {set.weight > 0 && <span>{displayUnit}</span>}
+        <span>×</span>
+        <span className="metric text-base text-gym-text">{set.reps}</span>
+        <span>{t('reps').toLowerCase()}</span>
       </span>
 
       <span className="rounded bg-gym-surface px-1.5 py-0.5 text-xs text-gym-muted">

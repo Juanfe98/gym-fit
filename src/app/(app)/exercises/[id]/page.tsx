@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
+import { ArrowLeft } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
 import exercisesJson from '@/data/exercises/exercises.json'
 import type { ExerciseSearchResult } from '@/modules/exercises/hooks/use-exercise-search'
@@ -12,6 +13,7 @@ import { getCoachingByExerciseDbId } from '@/modules/exercises/utils/catalog-coa
 import { FavoriteButton } from '@/modules/exercises/components/FavoriteButton'
 import { useFavorites } from '@/modules/exercises/hooks/use-favorites'
 import { AddToSessionButton } from '@/modules/exercises/components/AddToSessionButton'
+import { Chip, SectionLabel } from '@/components/ui'
 
 export default function ExerciseDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -24,7 +26,7 @@ export default function ExerciseDetailPage() {
 
   if (!exercise) {
     return (
-      <div className="p-4 flex flex-col gap-4">
+      <div className="flex flex-col gap-4 p-4">
         <p className="text-sm text-gym-muted">{t('noExercisesFound')}</p>
         <Link href="/exercises" className="text-sm font-medium text-gym-accent">
           {t('clearFilters')}
@@ -36,16 +38,17 @@ export default function ExerciseDetailPage() {
   const coaching = getCoachingByExerciseDbId(id)
 
   return (
-    <div className="flex flex-col gap-6 pb-8">
-      <div className="flex items-center gap-3 px-4 pt-4">
+    <div className="flex flex-col pb-8">
+      {/* Sticky top bar */}
+      <div className="sticky top-0 z-20 flex items-center gap-2 border-b border-gym-border-subtle bg-gym-bg/95 px-2 py-2 backdrop-blur">
         <button
           onClick={() => router.back()}
-          className="text-gym-muted shrink-0"
+          className="focus-ring flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-gym-text"
           aria-label="Back"
         >
-          ←
+          <ArrowLeft className="h-5 w-5" aria-hidden="true" />
         </button>
-        <h1 className="text-lg font-semibold text-gym-text flex-1">{exercise.name}</h1>
+        <h1 className="heading flex-1 truncate text-lg text-gym-text">{exercise.name}</h1>
         <FavoriteButton
           exerciseId={id}
           isFavorite={favorites.has(id)}
@@ -54,52 +57,37 @@ export default function ExerciseDetailPage() {
         />
       </div>
 
-      <div className="px-4">
+      <div className="flex flex-col gap-6 px-4 pt-4">
         <GifPlayer
           gifUrl={exercise.gifUrl}
           alt={t('exerciseGifAlt').replace('{name}', exercise.name)}
         />
-      </div>
 
-      <div className="px-4 flex flex-col gap-2">
-        <div className="flex flex-wrap gap-x-4 gap-y-1">
-          <span className="text-xs text-gym-muted">
-            <span className="font-medium text-gym-text">{t('filterMuscle')}: </span>
-            {exercise.bodyPart}
-          </span>
-          <span className="text-xs text-gym-muted">
-            <span className="font-medium text-gym-text">{t('equipmentLabel')}: </span>
-            {exercise.equipment}
-          </span>
-          <span className="text-xs text-gym-muted">
-            <span className="font-medium text-gym-text">{t('primaryMuscle')}: </span>
-            {exercise.target}
-          </span>
-          {exercise.secondaryMuscles.length > 0 && (
-            <span className="text-xs text-gym-muted">
-              <span className="font-medium text-gym-text">{t('secondaryMusclesLabel')}: </span>
-              {exercise.secondaryMuscles.join(', ')}
-            </span>
-          )}
+        {/* Quick facts */}
+        <div className="flex flex-wrap gap-2">
+          <Chip>{exercise.bodyPart}</Chip>
+          <Chip>{exercise.equipment}</Chip>
+          <Chip>{exercise.target}</Chip>
+          {exercise.secondaryMuscles.map((m) => (
+            <Chip key={m}>{m}</Chip>
+          ))}
         </div>
-      </div>
 
-      <div className="px-4">
-        <MuscleDiagram
-          primaryMuscle={exercise.target}
-          secondaryMuscles={exercise.secondaryMuscles}
-        />
-      </div>
-
-      <div className="px-4">
         <AddToSessionButton exerciseId={id} exerciseName={exercise.name} />
-      </div>
 
-      {coaching && (
-        <div className="px-4">
-          <CoachingContent coaching={coaching} />
-        </div>
-      )}
+        {/* Muscle diagram */}
+        <section className="flex flex-col gap-3">
+          <SectionLabel>{t('musclesDiagram')}</SectionLabel>
+          <div className="card p-4">
+            <MuscleDiagram
+              primaryMuscle={exercise.target}
+              secondaryMuscles={exercise.secondaryMuscles}
+            />
+          </div>
+        </section>
+
+        {coaching && <CoachingContent coaching={coaching} />}
+      </div>
     </div>
   )
 }

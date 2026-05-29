@@ -7,6 +7,7 @@ import { useI18n } from '@/i18n/client'
 import { getLocalizedExerciseName } from '@/i18n/exercise-names'
 import { syncCompletedSession } from '../services/session-supabase'
 import { finishedSessionToPayload } from '../utils/session-payload'
+import { useVolumeFormat } from '../hooks/use-volume-format'
 import type { FinishedSession } from '../types'
 
 interface SessionSummaryProps {
@@ -24,6 +25,7 @@ function formatDuration(seconds: number): string {
 
 export function SessionSummary({ session: initialSession }: SessionSummaryProps) {
   const { lang, t } = useI18n()
+  const { unit, formatVolume } = useVolumeFormat()
   const router = useRouter()
   const [notes, setNotes] = useState(initialSession.notes ?? '')
   const [saving, setSaving] = useState(false)
@@ -51,7 +53,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
       {/* Stats */}
       <div className="grid grid-cols-2 gap-3">
         <Stat label={t('duration')} value={formatDuration(initialSession.durationSeconds)} />
-        <Stat label={t('volume')} value={`${Math.round(initialSession.totalVolume)} kg`} />
+        <Stat label={t('volume')} value={`${formatVolume(initialSession.totalVolume)} ${unit}`} />
         <Stat label={t('exercises')} value={String(initialSession.exercises.length)} />
         <Stat label={t('sets')} value={String(initialSession.exercises.reduce((n, e) => n + e.sets.length, 0))} />
         {initialSession.prCount > 0 && (
@@ -71,10 +73,10 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
 
       {/* PR list */}
       {initialSession.prCount > 0 && (
-        <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 px-3 py-3">
+        <div className="bg-pr-subtle rounded-lg border border-gym-pr/30 px-3 py-3">
           <div className="mb-2 flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-yellow-400" />
-            <p className="text-sm font-semibold text-yellow-400">{t('personalRecords')}</p>
+            <Trophy className="text-pr h-4 w-4" />
+            <p className="text-pr text-sm font-semibold">{t('personalRecords')}</p>
           </div>
           {initialSession.exercises
             .flatMap((ex) => ex.sets.filter((s) => s.isPr).map((s) => ({ ex, s })))
@@ -95,7 +97,7 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
         className="w-full rounded border border-gym-border bg-gym-surface px-3 py-2 text-sm"
       />
 
-      {error && <p className="text-sm text-red-400">{error}</p>}
+      {error && <p className="text-sm text-danger">{error}</p>}
 
       <button
         type="button"
@@ -111,9 +113,9 @@ export function SessionSummary({ session: initialSession }: SessionSummaryProps)
 
 function Stat({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className={`rounded-lg border px-3 py-3 ${highlight ? 'border-yellow-500/30 bg-yellow-500/10' : 'border-gym-border bg-gym-surface'}`}>
+    <div className={`rounded-lg border px-3 py-3 ${highlight ? 'bg-pr-subtle border-gym-pr/30' : 'border-gym-border bg-gym-surface'}`}>
       <p className="text-xs text-gym-muted">{label}</p>
-      <p className={`metric text-xl ${highlight ? 'text-yellow-400' : ''}`}>{value}</p>
+      <p className={`metric text-xl ${highlight ? 'text-pr' : 'text-gym-text'}`}>{value}</p>
     </div>
   )
 }

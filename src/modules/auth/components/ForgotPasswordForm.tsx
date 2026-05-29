@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { forgotPasswordSchema, type ForgotPasswordInput } from '../validation/forgot-password.schema'
 import { createClient } from '@/lib/supabase/client'
 import { useI18n } from '@/i18n/client'
+import { AuthSubmitButton } from './AuthSubmitButton'
 
 const inputClass =
   'h-11 rounded-lg border border-gym-border bg-gym-surface px-3 text-sm focus:border-gym-border-strong focus:outline-none'
@@ -52,7 +53,7 @@ export function ForgotPasswordForm() {
       </div>
 
       {errors.root && (
-        <p role="alert" className="rounded border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+        <p role="alert" className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
           {errors.root.message}
         </p>
       )}
@@ -70,17 +71,13 @@ export function ForgotPasswordForm() {
           className={inputClass}
         />
         {errors.email && (
-          <p id="email-error" role="alert" className="text-xs text-red-400">{errors.email.message}</p>
+          <p id="email-error" role="alert" className="text-xs text-danger">{errors.email.message}</p>
         )}
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50"
-      >
+      <AuthSubmitButton loading={isSubmitting}>
         {isSubmitting ? t('sendingResetLink') : t('sendResetLink')}
-      </button>
+      </AuthSubmitButton>
 
       <Link href="/login" className="text-center text-sm text-gym-accent hover:underline">
         {t('backToSignIn')}

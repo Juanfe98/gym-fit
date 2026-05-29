@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Dumbbell, RotateCcw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { db } from '@/lib/offline-db'
 import { useWorkoutSessionStore } from '@/modules/workout-session/stores/workout-session-store'
@@ -75,40 +76,51 @@ export default function WorkoutPage() {
 
   if (status === 'recovered' && recoverable) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-6 px-8 text-center">
-        <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-semibold">{t('resumeWorkoutTitle')}</h2>
-          <p className="text-sm text-gym-muted">
-            {t('resumeWorkoutMessage')}
-          </p>
-        </div>
-        <div className="flex w-full max-w-xs flex-col gap-3">
-          <button
-            type="button"
-            onClick={handleResume}
-            className="h-11 rounded bg-orange-500 font-semibold text-white"
-          >
-            {t('resume')}
-          </button>
-          <button
-            type="button"
-            onClick={handleDiscard}
-            className="h-11 rounded border border-gym-border text-sm text-gym-muted"
-          >
-            {t('discard')}
-          </button>
+      <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-6 px-6">
+        <div className="card-elevated flex w-full max-w-xs flex-col items-center gap-5 p-6 text-center">
+          <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gym-accent-subtle text-gym-accent">
+            <RotateCcw className="h-7 w-7" aria-hidden="true" />
+          </span>
+          <div className="flex flex-col gap-1">
+            <h2 className="heading text-xl text-gym-text">{t('resumeWorkoutTitle')}</h2>
+            <p className="text-sm text-gym-muted">{t('resumeWorkoutMessage')}</p>
+          </div>
+          <div className="flex w-full flex-col gap-3">
+            <button
+              type="button"
+              onClick={handleResume}
+              className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98]"
+            >
+              {t('resume')}
+            </button>
+            <button
+              type="button"
+              onClick={handleDiscard}
+              className="h-11 rounded-lg border border-gym-border text-sm font-medium text-gym-muted transition-colors active:bg-gym-surface-2"
+            >
+              {t('discard')}
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 px-8">
-      <h1 className="text-2xl font-bold">{t('readyToTrain')}</h1>
+    <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-8 px-8 text-center">
+      <div className="flex flex-col items-center gap-5">
+        <span className="glow-accent flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-orange-500 to-orange-700">
+          <Dumbbell className="h-10 w-10 text-white" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <div className="flex flex-col gap-2">
+          <h1 className="heading text-4xl text-gym-text">{t('readyToTrain')}</h1>
+          <p className="max-w-xs text-sm text-gym-muted">{t('workoutIdleSubtitle')}</p>
+        </div>
+      </div>
       <button
         type="button"
         onClick={handleStart}
-        className="h-11 w-full max-w-xs rounded bg-orange-500 font-semibold text-white"
+        className="glow-accent h-12 w-full max-w-xs rounded-xl bg-gym-accent text-base font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98]"
       >
         {t('startWorkout')}
       </button>

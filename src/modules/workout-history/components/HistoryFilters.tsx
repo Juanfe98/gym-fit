@@ -1,5 +1,6 @@
 'use client'
 
+import { Search, X } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
 import { useHistoryFilterStore } from '../stores/history-filter-store'
 import type { DateRangeFilter } from '../types'
@@ -46,12 +47,16 @@ export function HistoryFilters({ isSearching = false }: HistoryFiltersProps) {
         })}
       </div>
       <div className="relative">
+        <Search
+          className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gym-muted"
+          aria-hidden="true"
+        />
         <input
           type="search"
           value={exerciseSearch}
           onChange={(e) => setExerciseSearch(e.target.value)}
           placeholder={t('historySearchPlaceholder')}
-          className="h-11 w-full rounded border border-gym-border bg-gym-surface px-3 pr-8 text-sm placeholder:text-gym-muted"
+          className="min-h-[44px] w-full rounded-full bg-gym-surface-2 pl-9 pr-9 text-sm text-gym-text placeholder:text-gym-muted focus:outline-none focus:ring-1 focus:ring-gym-border-strong"
         />
         {isSearching && !exerciseSearch && (
           <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gym-muted">
@@ -63,9 +68,9 @@ export function HistoryFilters({ isSearching = false }: HistoryFiltersProps) {
             type="button"
             onClick={() => setExerciseSearch('')}
             aria-label="Clear search"
-            className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center text-gym-muted"
+            className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-gym-muted"
           >
-            ×
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
       </div>

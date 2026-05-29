@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { SearchX } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
 import { useExerciseSearch } from '@/modules/exercises/hooks/use-exercise-search'
 import type { ExerciseSearchResult } from '@/modules/exercises/hooks/use-exercise-search'
@@ -9,6 +10,7 @@ import { ExerciseFilters } from '@/modules/exercises/components/ExerciseFilters'
 import { ExerciseListItem } from '@/modules/exercises/components/ExerciseListItem'
 import type { ExerciseFilterState } from '@/modules/exercises/types'
 import { useFavorites } from '@/modules/exercises/hooks/use-favorites'
+import { PageHeader, EmptyState } from '@/components/ui'
 
 const DEFAULT_FILTERS: ExerciseFilterState = {
   query: '',
@@ -69,22 +71,30 @@ export default function ExercisesPage() {
 
   return (
     <div className="flex flex-col">
-      <h1 className="px-4 pt-4 text-lg font-semibold text-gym-text">{t('exerciseLibraryTitle')}</h1>
+      <PageHeader
+        title={t('exerciseLibraryTitle')}
+        subtitle={
+          data && !filters.favoritesOnly
+            ? t('exerciseLibrarySubtitle', { count: data.total })
+            : undefined
+        }
+      />
       <ExerciseFilters filters={filters} onChange={setFilters} />
       {isEmpty ? (
-        <div className="flex flex-col items-center gap-3 px-4 py-8 text-center">
-          <p className="text-sm text-gym-muted">
-            {t(filters.favoritesOnly ? 'exercisesEmptyFavorites' : 'exercisesEmpty')}
-          </p>
-          <button
-            onClick={() => setFilters(DEFAULT_FILTERS)}
-            className="text-sm font-medium text-gym-accent"
-          >
-            {t('clearFilters')}
-          </button>
-        </div>
+        <EmptyState
+          Icon={SearchX}
+          title={t(filters.favoritesOnly ? 'exercisesEmptyFavorites' : 'exercisesEmpty')}
+          action={
+            <button
+              onClick={() => setFilters(DEFAULT_FILTERS)}
+              className="text-sm font-semibold text-gym-accent"
+            >
+              {t('clearFilters')}
+            </button>
+          }
+        />
       ) : (
-        <ul className="flex flex-col divide-y divide-gym-surface-2">
+        <ul className="flex flex-col gap-2 px-4 py-3">
           {displayExercises.map((exercise) => (
             <li key={exercise.id}>
               <ExerciseListItem

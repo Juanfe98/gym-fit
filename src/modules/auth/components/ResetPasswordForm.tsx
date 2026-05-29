@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation'
 import { resetPasswordSchema, type ResetPasswordInput } from '../validation/reset-password.schema'
 import { createClient } from '@/lib/supabase/client'
 import { useI18n } from '@/i18n/client'
+import { PasswordInput } from './PasswordInput'
+import { AuthSubmitButton } from './AuthSubmitButton'
 
 const inputClass =
   'h-11 rounded-lg border border-gym-border bg-gym-surface px-3 text-sm focus:border-gym-border-strong focus:outline-none'
@@ -47,7 +49,7 @@ export function ResetPasswordForm() {
   if (isInvalidLink) {
     return (
       <div className="flex flex-col gap-4 text-center">
-        <p className="text-sm text-red-400">{t('resetLinkInvalid')}</p>
+        <p className="text-sm text-danger">{t('resetLinkInvalid')}</p>
         <Link href="/forgot-password" className="text-sm text-gym-accent hover:underline">
           {t('requestNewLink')}
         </Link>
@@ -60,7 +62,7 @@ export function ResetPasswordForm() {
       <h2 className="text-center text-xl font-semibold text-gym-text">{t('resetPasswordTitle')}</h2>
 
       {errors.root && (
-        <p role="alert" className="rounded border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-400">
+        <p role="alert" className="rounded-lg border border-danger/30 bg-danger/10 px-3 py-2 text-sm text-danger">
           {errors.root.message}
         </p>
       )}
@@ -68,9 +70,8 @@ export function ResetPasswordForm() {
       <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1">
           <label htmlFor="password" className="sr-only">{t('newPassword')}</label>
-          <input
+          <PasswordInput
             id="password"
-            type="password"
             placeholder={t('newPassword')}
             autoComplete="new-password"
             aria-required="true"
@@ -79,7 +80,7 @@ export function ResetPasswordForm() {
             className={inputClass}
           />
           {errors.password ? (
-            <p id="password-error" role="alert" className="text-xs text-red-400">{errors.password.message}</p>
+            <p id="password-error" role="alert" className="text-xs text-danger">{errors.password.message}</p>
           ) : (
             <p id="password-hint" className="text-xs text-gym-muted">{t('passwordRequirements')}</p>
           )}
@@ -87,9 +88,8 @@ export function ResetPasswordForm() {
 
         <div className="flex flex-col gap-1">
           <label htmlFor="confirmPassword" className="sr-only">{t('confirmPassword')}</label>
-          <input
+          <PasswordInput
             id="confirmPassword"
-            type="password"
             placeholder={t('confirmPassword')}
             autoComplete="new-password"
             aria-required="true"
@@ -98,18 +98,14 @@ export function ResetPasswordForm() {
             className={inputClass}
           />
           {errors.confirmPassword && (
-            <p id="confirmPassword-error" role="alert" className="text-xs text-red-400">{errors.confirmPassword.message}</p>
+            <p id="confirmPassword-error" role="alert" className="text-xs text-danger">{errors.confirmPassword.message}</p>
           )}
         </div>
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="glow-accent h-11 rounded-lg bg-gym-accent font-semibold text-white transition-all hover:bg-orange-600 active:scale-[0.98] disabled:opacity-50"
-      >
+      <AuthSubmitButton loading={isSubmitting}>
         {isSubmitting ? t('savingPassword') : t('savePassword')}
-      </button>
+      </AuthSubmitButton>
     </form>
   )
 }

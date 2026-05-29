@@ -36,7 +36,7 @@ export function SessionTimer() {
       className="flex min-h-[44px] min-w-[44px] items-center gap-1 rounded px-2 py-1"
       aria-label={isPaused ? t('resumeTimer') : t('pauseTimer')}
     >
-      <span className="font-mono text-lg font-semibold tabular-nums">
+      <span className="metric text-xl text-gym-text">
         {formatElapsed(elapsedSeconds)}
       </span>
       {isPaused

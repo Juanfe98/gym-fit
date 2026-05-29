@@ -2,21 +2,21 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Home, Dumbbell, History, User, BookOpen } from 'lucide-react'
+import { Home, Dumbbell, ClipboardList, User, BookOpen } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
 import type { LucideIcon } from 'lucide-react'
 
 type NavTab = {
   href: string
-  labelKey: 'navHome' | 'navWorkout' | 'navExercises' | 'history' | 'navProfile'
+  labelKey: 'navHome' | 'navWorkout' | 'navPlans' | 'navExercises' | 'navProfile'
   Icon: LucideIcon
 }
 
 const NAV_TABS: NavTab[] = [
   { href: '/', labelKey: 'navHome', Icon: Home },
   { href: '/workout', labelKey: 'navWorkout', Icon: Dumbbell },
+  { href: '/plans', labelKey: 'navPlans', Icon: ClipboardList },
   { href: '/exercises', labelKey: 'navExercises', Icon: BookOpen },
-  { href: '/history', labelKey: 'history', Icon: History },
   { href: '/profile', labelKey: 'navProfile', Icon: User },
 ]
 

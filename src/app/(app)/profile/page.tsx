@@ -1,13 +1,24 @@
-'use client'
+import { redirect } from 'next/navigation'
+import { createClient } from '@/lib/supabase/server'
+import { ProfileScreen } from '@/modules/profile'
 
-import { useI18n } from '@/i18n/client'
-
-export default function ProfilePage() {
-  const { t } = useI18n()
+export default async function ProfilePage() {
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) redirect('/login')
 
   return (
-    <main className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-4 text-center">
-      <p className="text-sm text-gym-muted">{t('profileComingSoon')}</p>
-    </main>
+    <ProfileScreen
+      user={{
+        id: user.id,
+        displayName:
+          user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'User',
+        email: user.email ?? '',
+        avatarUrl: user.user_metadata?.avatar_url ?? null,
+        createdAt: user.created_at ?? null,
+      }}
+    />
   )
 }

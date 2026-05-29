@@ -1,7 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { History, SearchX } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
+import { EmptyState } from '@/components/ui'
 
 interface HistoryEmptyStateProps {
   variant: 'no-history' | 'filtered'
@@ -13,30 +15,36 @@ export function HistoryEmptyState({ variant, onClearFilter }: HistoryEmptyStateP
 
   if (variant === 'filtered') {
     return (
-      <div className="flex flex-col items-center gap-4 py-16 text-center">
-        <p className="text-sm text-gym-muted">{t('historyFilterEmpty')}</p>
-        {onClearFilter && (
-          <button
-            type="button"
-            onClick={onClearFilter}
-            className="min-h-[44px] rounded border border-gym-border px-6 text-sm"
-          >
-            {t('historyClearFilter')}
-          </button>
-        )}
-      </div>
+      <EmptyState
+        Icon={SearchX}
+        title={t('historyFilterEmpty')}
+        action={
+          onClearFilter && (
+            <button
+              type="button"
+              onClick={onClearFilter}
+              className="min-h-[44px] rounded-lg border border-gym-border px-6 text-sm font-medium text-gym-text"
+            >
+              {t('historyClearFilter')}
+            </button>
+          )
+        }
+      />
     )
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 py-16 text-center">
-      <p className="text-sm text-gym-muted">{t('historyEmpty')}</p>
-      <Link
-        href="/workout"
-        className="inline-flex min-h-[44px] items-center rounded bg-orange-500 px-6 text-sm font-semibold text-white"
-      >
-        {t('historyEmptyCtaStart')}
-      </Link>
-    </div>
+    <EmptyState
+      Icon={History}
+      title={t('historyEmpty')}
+      action={
+        <Link
+          href="/workout"
+          className="glow-accent inline-flex min-h-[44px] items-center rounded-lg bg-gym-accent px-6 text-sm font-semibold text-white"
+        >
+          {t('historyEmptyCtaStart')}
+        </Link>
+      }
+    />
   )
 }

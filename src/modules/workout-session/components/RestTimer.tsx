@@ -46,10 +46,10 @@ export function RestTimer() {
             strokeLinecap="round"
             strokeDasharray={CIRCUMFERENCE}
             strokeDashoffset={dashOffset}
-            className="text-orange-500 transition-[stroke-dashoffset] duration-500"
+            className="text-gym-accent transition-[stroke-dashoffset] duration-500"
           />
         </svg>
-        <span className="absolute text-2xl font-bold tabular-nums">{remaining}</span>
+        <span className="metric absolute text-3xl text-gym-text">{remaining}</span>
       </div>
 
       <button
