@@ -5,8 +5,8 @@ import { X } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
 import { getEquipmentLabel, getMuscleLabel } from '@/i18n/content'
 import { getLocalizedExerciseName } from '@/i18n/exercise-names'
-import { useExerciseSearch, BODY_PARTS } from '../hooks/use-exercise-search'
-import type { ExerciseSearchResult } from '../hooks/use-exercise-search'
+import { useExerciseSearch, BODY_PARTS } from '@/modules/exercises/hooks/use-exercise-search'
+import type { ExerciseSearchResult } from '@/modules/exercises/hooks/use-exercise-search'
 
 interface ExerciseRef {
   exerciseId: string

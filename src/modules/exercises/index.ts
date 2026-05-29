@@ -1,0 +1,11 @@
+// barrel — exports added per phase
+export { ExerciseListItem } from './components/ExerciseListItem'
+export { ExerciseFilters } from './components/ExerciseFilters'
+export { useExerciseSearch, BODY_PARTS, EQUIPMENT_OPTIONS } from './hooks/use-exercise-search'
+export type { ExerciseFilterState, CoachingData } from './types'
+export { GifPlayer } from './components/GifPlayer'
+export { MuscleDiagram } from './components/MuscleDiagram'
+export { CoachingContent } from './components/CoachingContent'
+export { FavoriteButton } from './components/FavoriteButton'
+export { useFavorites } from './hooks/use-favorites'
+export { AddToSessionButton } from './components/AddToSessionButton'
