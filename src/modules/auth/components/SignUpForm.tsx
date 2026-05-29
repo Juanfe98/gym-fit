@@ -35,7 +35,7 @@ export function SignUpForm() {
       return
     }
     if (data.session !== null) {
-      router.push('/onboarding')
+      router.push('/onboarding/welcome')
     } else if (data.user !== null) {
       router.push('/verify-email')
     }
