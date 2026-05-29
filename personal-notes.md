@@ -10,8 +10,8 @@
 | 004 | Workout History           | `workout-history` | ✅ Done                                                         |
 | 005 | Home + Bottom Nav         | `home`            | ✅ Shell done — home widgets added incrementally per spec below |
 | 006 | Auth Completion           | `auth`            | ✅ Done                                                         |
-| 007 | Exercise Library          | `exercises`       | ⬜                                                              |
-| 008 | Workout Plans             | `workout-plans`   | ⬜                                                              |
+| 007 | Exercise Library          | `exercises`       | ✅ Done                                                         |
+| 008 | Workout Plans             | `workout-plans`   | ✅ Done                                                         |
 | 009 | Profile + Fitness Profile | `profile`         | ⬜                                                              |
 | 010 | Onboarding                | `onboarding`      | ⬜                                                              |
 | 011 | Progress Dashboard        | `progress`        | ⬜                                                              |

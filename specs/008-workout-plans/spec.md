@@ -2,7 +2,7 @@
 
 **Feature Branch**: `008-workout-plans`
 **Created**: 2026-05-29
-**Status**: Draft
+**Status**: Done
 **Input**: User description: "Workout Plans module — create, view, edit, activate, duplicate, archive plans with workout days and exercise configuration"
 
 ## User Scenarios & Testing *(mandatory)*
