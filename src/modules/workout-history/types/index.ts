@@ -18,6 +18,9 @@ export interface WorkoutHistorySummary {
   exerciseCount: number
   notes: string | null
   sourcePlanId: string | null
+  sourceWorkoutDayId: string | null
+  sourcePlanName: string | null
+  sourceDayName: string | null
 }
 
 export interface WorkoutHistoryDetail {
@@ -29,6 +32,9 @@ export interface WorkoutHistoryDetail {
   prCount: number
   notes: string | null
   sourcePlanId: string | null
+  sourceWorkoutDayId: string | null
+  sourcePlanName: string | null
+  sourceDayName: string | null
   exercises: WorkoutHistoryExercise[]
 }
 

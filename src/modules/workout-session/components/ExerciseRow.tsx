@@ -12,6 +12,7 @@ import { SetLogRow } from './SetLogRow'
 import { SetLogForm } from './SetLogForm'
 import { ExercisePicker } from './ExercisePicker'
 import { CancelSessionDialog } from './CancelSessionDialog'
+import { formatPlanTarget } from '../utils/plan-targets'
 import type { SessionExerciseDraft, SetInput } from '../types'
 
 const DEFAULT_REST_SECONDS = 90
@@ -121,6 +122,11 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
         </div>
       </div>
 
+      {/* Plan target hint */}
+      {formatPlanTarget(exercise) && (
+        <p className="px-3 py-1 text-xs text-gym-muted">{formatPlanTarget(exercise)}</p>
+      )}
+
       {/* Sets */}
       {exercise.sets.length === 0 && (
         <p className="px-3 py-2 text-sm text-gym-muted">{t('logFirstSet')}</p>
@@ -141,7 +147,9 @@ export function ExerciseRow({ exercise }: ExerciseRowProps) {
                     weightUnit: exercise.sets[exercise.sets.length - 1].weightUnit,
                     setType: exercise.sets[exercise.sets.length - 1].setType,
                   }
-                : undefined
+                : exercise.targetWeight != null
+                  ? { weight: exercise.targetWeight }
+                  : undefined
             }
           />
           <button

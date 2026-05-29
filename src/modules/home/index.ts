@@ -1,4 +1,5 @@
 export { AppShell } from './components/AppShell'
+export { PlanWidget } from './components/PlanWidget'
 export { BottomNav } from './components/BottomNav'
 export { HomeHeader } from './components/HomeHeader'
 export { RecentWorkoutCard } from './components/RecentWorkoutCard'

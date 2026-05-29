@@ -159,6 +159,24 @@ export async function archivePlan(planId: string): Promise<void> {
   if (error) throw error
 }
 
+export async function getLastCompletedPlanSession(
+  userId: string,
+  planId: string,
+): Promise<{ sourceWorkoutDayId: string | null } | null> {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('workout_sessions')
+    .select('source_workout_day_id')
+    .eq('user_id', userId)
+    .eq('source_plan_id', planId)
+    .eq('status', 'completed')
+    .order('started_at', { ascending: false })
+    .limit(1)
+    .maybeSingle()
+  if (error) throw error
+  return data ? { sourceWorkoutDayId: (data as { source_workout_day_id: string | null }).source_workout_day_id } : null
+}
+
 export async function duplicatePlan(userId: string, sourcePlanId: string): Promise<WorkoutPlan> {
   const source = await getPlan(sourcePlanId)
   if (!source) throw new Error('Source plan not found')

@@ -49,6 +49,18 @@ export function WorkoutHistoryDetail({ session }: WorkoutHistoryDetailProps) {
         </p>
       </div>
 
+      {session.sourcePlanName && (
+        <div className="flex flex-col gap-0.5">
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-gym-muted">
+            From Plan
+          </span>
+          <span className="text-sm font-medium">
+            {session.sourcePlanName}
+            {session.sourceDayName && ` · ${session.sourceDayName}`}
+          </span>
+        </div>
+      )}
+
       <div className="flex flex-wrap gap-x-6 gap-y-3">
         <div className="flex flex-col gap-0.5">
           <span className="text-[11px] uppercase tracking-wide text-gym-muted">Duration</span>

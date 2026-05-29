@@ -15,6 +15,8 @@ export function finishedSessionToPayload(session: FinishedSession): SyncSessionP
       notes: session.notes ?? null,
       source_plan_id: session.sourcePlanId ?? null,
       source_workout_day_id: session.sourceWorkoutDayId ?? null,
+      source_plan_name: session.sourcePlanName ?? null,
+      source_day_name: session.sourceDayName ?? null,
       sync_status: 'synced',
     },
     exercises: session.exercises.map((ex) => ({

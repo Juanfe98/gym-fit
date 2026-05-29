@@ -15,6 +15,8 @@ export interface SyncSessionPayload {
     notes: string | null
     source_plan_id: string | null
     source_workout_day_id: string | null
+    source_plan_name: string | null
+    source_day_name: string | null
     sync_status: 'synced'
   }
   exercises: Array<{

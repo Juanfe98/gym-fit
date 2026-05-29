@@ -9,6 +9,8 @@ export interface OfflineWorkoutSession {
   notes?: string
   sourcePlanId?: string
   sourceWorkoutDayId?: string
+  sourcePlanName?: string
+  sourceDayName?: string
   syncStatus: 'local' | 'pending_sync' | 'syncing' | 'synced' | 'sync_failed'
 }
 
@@ -21,6 +23,11 @@ export interface OfflineSessionExercise {
   notes?: string
   wasReplaced: boolean
   originalExerciseId?: string
+  targetSets?: number
+  targetReps?: number
+  targetRepRangeMin?: number
+  targetRepRangeMax?: number
+  targetWeight?: number
 }
 
 export interface OfflineSetLog {

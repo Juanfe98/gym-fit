@@ -26,6 +26,11 @@ export interface SessionExerciseDraft {
   displayOrder: number
   notes?: string
   sets: SetLogDraft[]
+  targetSets?: number
+  targetReps?: number
+  targetRepRangeMin?: number
+  targetRepRangeMax?: number
+  targetWeight?: number
 }
 
 export interface ActiveSessionDraft {
@@ -37,6 +42,8 @@ export interface ActiveSessionDraft {
   notes?: string
   sourcePlanId?: string
   sourceWorkoutDayId?: string
+  sourcePlanName?: string
+  sourceDayName?: string
   syncStatus: SyncStatus
 }
 

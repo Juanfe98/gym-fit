@@ -12,11 +12,18 @@ import type {
 interface StartSessionOptions {
   sourcePlanId?: string
   sourceWorkoutDayId?: string
+  sourcePlanName?: string
+  sourceDayName?: string
 }
 
 interface ExerciseRef {
   exerciseId: string
   exerciseNameSnapshot: string
+  targetSets?: number
+  targetReps?: number
+  targetRepRangeMin?: number
+  targetRepRangeMax?: number
+  targetWeight?: number
 }
 
 interface WorkoutSessionState {
@@ -85,6 +92,11 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
           exerciseNameSnapshot: ex.exerciseNameSnapshot,
           displayOrder: ex.displayOrder,
           notes: ex.notes,
+          targetSets: ex.targetSets,
+          targetReps: ex.targetReps,
+          targetRepRangeMin: ex.targetRepRangeMin,
+          targetRepRangeMax: ex.targetRepRangeMax,
+          targetWeight: ex.targetWeight,
           sets: storedSets.map((s) => ({
             id: s.id,
             setNumber: s.setNumber,
@@ -128,6 +140,11 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
       exerciseNameSnapshot: exercise.exerciseNameSnapshot,
       displayOrder,
       wasReplaced: false,
+      targetSets: exercise.targetSets,
+      targetReps: exercise.targetReps,
+      targetRepRangeMin: exercise.targetRepRangeMin,
+      targetRepRangeMax: exercise.targetRepRangeMax,
+      targetWeight: exercise.targetWeight,
     })
     set((state) => ({
       session: state.session
@@ -141,6 +158,11 @@ export const useWorkoutSessionStore = create<WorkoutSessionState>((set, get) => 
                 exerciseNameSnapshot: exercise.exerciseNameSnapshot,
                 displayOrder,
                 sets: [],
+                targetSets: exercise.targetSets,
+                targetReps: exercise.targetReps,
+                targetRepRangeMin: exercise.targetRepRangeMin,
+                targetRepRangeMax: exercise.targetRepRangeMax,
+                targetWeight: exercise.targetWeight,
               },
             ],
           }

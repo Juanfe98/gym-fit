@@ -1,29 +1,113 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { Dumbbell, RotateCcw } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { db } from '@/lib/offline-db'
 import { useWorkoutSessionStore } from '@/modules/workout-session/stores/workout-session-store'
 import { ActiveWorkoutScreen } from '@/modules/workout-session/components/ActiveWorkoutScreen'
 import { useI18n } from '@/i18n/client'
+import { getPlanExercises } from '@/modules/workout-plans/services/exercises-service'
+import { EXERCISE_CATALOG } from '@/data/exercises/catalog'
 import type { OfflineWorkoutSession } from '@/lib/offline-db'
+import type { ExerciseKey } from '@/types'
 
-type PageStatus = 'checking' | 'idle' | 'recovered' | 'active'
+type PageStatus = 'checking' | 'plan_loading' | 'idle' | 'recovered' | 'active'
 
 export default function WorkoutPage() {
   const { t } = useI18n()
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <span className="text-sm text-gym-muted">{t('loading')}</span>
+        </div>
+      }
+    >
+      <WorkoutPageContent />
+    </Suspense>
+  )
+}
+
+function WorkoutPageContent() {
+  const { t } = useI18n()
+  const searchParams = useSearchParams()
+  const router = useRouter()
   const session = useWorkoutSessionStore((s) => s.session)
   const startSession = useWorkoutSessionStore((s) => s.startSession)
+  const addExercise = useWorkoutSessionStore((s) => s.addExercise)
   const recoverSession = useWorkoutSessionStore((s) => s.recoverSession)
   const discardSession = useWorkoutSessionStore((s) => s.discardSession)
 
   const [status, setStatus] = useState<PageStatus>('checking')
   const [recoverable, setRecoverable] = useState<OfflineWorkoutSession | null>(null)
+  const startedRef = useRef(false)
+
+  const planId = searchParams.get('planId')
+  const dayId = searchParams.get('dayId')
+  const planName = searchParams.get('planName')
+  const dayName = searchParams.get('dayName')
+
+  async function handlePlanDayStart(
+    pId: string,
+    dId: string,
+    pName: string,
+    dName: string,
+  ) {
+    if (startedRef.current) return
+    startedRef.current = true
+    setStatus('plan_loading')
+    try {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setStatus('idle'); return }
+      const exercises = await getPlanExercises(dId)
+      if (exercises.length === 0) { setStatus('idle'); return }
+      await startSession(user.id, {
+        sourcePlanId: pId,
+        sourceWorkoutDayId: dId,
+        sourcePlanName: pName,
+        sourceDayName: dName,
+      })
+      for (const ex of exercises) {
+        await addExercise({
+          exerciseId: ex.exerciseId,
+          exerciseNameSnapshot:
+            EXERCISE_CATALOG[ex.exerciseId as ExerciseKey]?.displayName ?? ex.exerciseId,
+          targetSets: ex.targetSets ?? undefined,
+          targetReps: ex.targetReps ?? undefined,
+          targetRepRangeMin: ex.targetRepRangeMin ?? undefined,
+          targetRepRangeMax: ex.targetRepRangeMax ?? undefined,
+          targetWeight: ex.targetWeight ?? undefined,
+        })
+      }
+      router.replace('/workout')
+      setStatus('active')
+    } catch {
+      setStatus('idle')
+    }
+  }
 
   useEffect(() => {
     if (session) {
       setStatus('active')
+      return
+    }
+
+    if (planId && dayId && planName && dayName) {
+      db.workoutSessions
+        .where('status')
+        .equals('in_progress')
+        .first()
+        .then((found) => {
+          if (found) {
+            setRecoverable(found)
+            setStatus('recovered')
+          } else {
+            handlePlanDayStart(planId, dayId, planName, dayName)
+          }
+        })
       return
     }
 
@@ -39,6 +123,7 @@ export default function WorkoutPage() {
           setStatus('idle')
         }
       })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session])
 
   async function handleStart() {
@@ -62,10 +147,12 @@ export default function WorkoutPage() {
     setStatus('idle')
   }
 
-  if (status === 'checking') {
+  if (status === 'checking' || status === 'plan_loading') {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <span className="text-sm text-gym-muted">{t('loading')}</span>
+        <span className="text-sm text-gym-muted">
+          {status === 'plan_loading' ? t('loadingPlanExercises') : t('loading')}
+        </span>
       </div>
     )
   }

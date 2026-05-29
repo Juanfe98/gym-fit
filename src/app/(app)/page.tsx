@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import {
   HomeHeader,
+  PlanWidget,
   StartWorkoutCTA,
   WeeklySummary,
   RecentWorkoutSection,
@@ -18,6 +19,7 @@ export default async function HomePage() {
     <>
       <HomeHeader displayName={displayName} avatarUrl={avatarUrl} userId={userId} />
       <div className="flex flex-col gap-6 px-4 pt-4 pb-4">
+        <PlanWidget userId={userId} />
         <StartWorkoutCTA userId={userId} />
         <WeeklySummary userId={userId} />
         <RecentWorkoutSection userId={userId} />

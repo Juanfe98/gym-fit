@@ -51,6 +51,9 @@ export async function fetchHistoryList({
       pr_count,
       notes,
       source_plan_id,
+      source_workout_day_id,
+      source_plan_name,
+      source_day_name,
       session_exercises (
         id,
         set_logs (
@@ -85,6 +88,9 @@ export async function fetchHistoryList({
     prCount: s.pr_count ?? 0,
     notes: s.notes,
     sourcePlanId: s.source_plan_id,
+    sourceWorkoutDayId: s.source_workout_day_id ?? null,
+    sourcePlanName: s.source_plan_name ?? null,
+    sourceDayName: s.source_day_name ?? null,
     exerciseCount: (s.session_exercises ?? []).length,
     totalSets: (s.session_exercises ?? [])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -119,6 +125,9 @@ export async function fetchHistoryDetail({
       pr_count,
       notes,
       source_plan_id,
+      source_workout_day_id,
+      source_plan_name,
+      source_day_name,
       session_exercises (
         id,
         exercise_id,
@@ -157,6 +166,9 @@ export async function fetchHistoryDetail({
     prCount: s.pr_count ?? 0,
     notes: s.notes,
     sourcePlanId: s.source_plan_id,
+    sourceWorkoutDayId: s.source_workout_day_id ?? null,
+    sourcePlanName: s.source_plan_name ?? null,
+    sourceDayName: s.source_day_name ?? null,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     exercises: (s.session_exercises ?? []).sort((a: any, b: any) => a.display_order - b.display_order).map((ex: any): WorkoutHistoryExercise => ({
       id: ex.id,

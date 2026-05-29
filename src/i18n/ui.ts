@@ -254,6 +254,11 @@ export const UI: Record<Language, Record<string, string>> = {
     myPlans: 'My Plans',
     createPlanCta: 'Create a plan to structure your training',
     workoutHistory: 'Workout History',
+    activePlanHeader: 'Your Plan',
+    nextUpLabel: 'Next up',
+    emptyDayWarning: 'This day has no exercises yet',
+    planAttributionLabel: 'Plan:',
+    loadingPlanExercises: 'Loading exercises…',
   },
   es: {
     appName: 'Gym Planner',
@@ -507,6 +512,11 @@ export const UI: Record<Language, Record<string, string>> = {
     myPlans: 'Mis Planes',
     createPlanCta: 'Crea un plan para estructurar tu entrenamiento',
     workoutHistory: 'Historial de Entrenamientos',
+    activePlanHeader: 'Tu Plan',
+    nextUpLabel: 'Siguiente',
+    emptyDayWarning: 'Este día no tiene ejercicios aún',
+    planAttributionLabel: 'Plan:',
+    loadingPlanExercises: 'Cargando ejercicios…',
   },
 };
 

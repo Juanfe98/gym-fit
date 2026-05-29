@@ -39,6 +39,11 @@ export function WorkoutHistoryCard({ session }: WorkoutHistoryCardProps) {
       <div className="flex items-start justify-between gap-2">
         <div className="flex min-w-0 flex-col gap-0.5">
           <h3 className="truncate text-sm font-semibold text-gym-text">{title}</h3>
+          {session.sourcePlanName && session.sourceDayName && (
+            <span className="text-xs text-gym-muted">
+              {session.sourcePlanName} · {session.sourceDayName}
+            </span>
+          )}
           <span className="text-xs text-gym-muted">{date}</span>
         </div>
         <div className="flex shrink-0 items-center gap-2">
