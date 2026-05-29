@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Dumbbell } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useI18n } from '@/i18n/client'
@@ -82,6 +83,17 @@ export default function LoginPage() {
             {loading ? t('signingIn') : t('signIn')}
           </button>
         </form>
+        <div className="flex flex-col items-center gap-2 text-sm text-gym-muted">
+          <Link href="/forgot-password" className="flex min-h-[44px] items-center transition-colors hover:text-gym-text">
+            {t('forgotPassword')}
+          </Link>
+          <span>
+            {t('dontHaveAccount')}{' '}
+            <Link href="/signup" className="text-gym-accent hover:underline">
+              {t('signUp')}
+            </Link>
+          </span>
+        </div>
       </div>
     </main>
   )
