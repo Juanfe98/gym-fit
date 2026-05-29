@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { signUpSchema, type SignUpInput } from '../validation/sign-up.schema'
 import { createClient } from '@/lib/supabase/client'
 import { useI18n } from '@/i18n/client'
@@ -143,6 +144,13 @@ export function SignUpForm() {
       >
         {isSubmitting ? t('signingUp') : t('signUp')}
       </button>
+
+      <p className="text-center text-sm text-gym-muted">
+        {t('alreadyHaveAccount')}{' '}
+        <Link href="/login" className="text-gym-accent hover:underline">
+          {t('signIn')}
+        </Link>
+      </p>
     </form>
   )
 }
