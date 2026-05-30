@@ -95,9 +95,14 @@ export type ExperienceOption = {
   exampleKeys: readonly OnboardingExperienceCopyKey[]
 }
 
+export const WEEKLY_WORKOUT_DAYS_OPTIONS = [2, 3, 4, 5, 6] as const
+
+export type WeeklyWorkoutDays = (typeof WEEKLY_WORKOUT_DAYS_OPTIONS)[number]
+
 export type OnboardingState = {
   mainGoal?: MainGoal | null
   experienceLevel?: ExperienceLevel | null
+  weeklyWorkoutDays?: WeeklyWorkoutDays | null
 }
 
 const MAIN_GOAL_IDS = new Set<string>(ONBOARDING_GOAL_OPTIONS.map((option) => option.id))
@@ -109,4 +114,11 @@ export function isMainGoal(value: unknown): value is MainGoal {
 
 export function isExperienceLevel(value: unknown): value is ExperienceLevel {
   return typeof value === 'string' && EXPERIENCE_LEVEL_IDS.has(value)
+}
+
+export function isWeeklyWorkoutDays(value: unknown): value is WeeklyWorkoutDays {
+  return (
+    typeof value === 'number' &&
+    (WEEKLY_WORKOUT_DAYS_OPTIONS as readonly number[]).includes(value)
+  )
 }

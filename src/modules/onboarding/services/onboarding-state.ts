@@ -1,5 +1,12 @@
 import { createClient } from '@/lib/supabase/client'
-import { isExperienceLevel, isMainGoal, type ExperienceLevel, type MainGoal } from '../types'
+import {
+  isExperienceLevel,
+  isMainGoal,
+  isWeeklyWorkoutDays,
+  type ExperienceLevel,
+  type MainGoal,
+  type WeeklyWorkoutDays,
+} from '../types'
 
 async function getAuthenticatedUserId() {
   const supabase = createClient()
@@ -66,6 +73,40 @@ export async function saveExperienceLevel(experienceLevel: ExperienceLevel) {
         fitness_goal: existing?.fitness_goal ?? null,
         experience_level: experienceLevel,
         days_per_week: existing?.days_per_week ?? null,
+        session_duration_minutes: existing?.session_duration_minutes ?? null,
+        preferred_days: existing?.preferred_days ?? [],
+        height_unit: existing?.height_unit ?? 'cm',
+        weight_unit: existing?.weight_unit ?? 'kg',
+        updated_at: new Date().toISOString(),
+      },
+      { onConflict: 'user_id' }
+    )
+
+  if (error) throw error
+}
+
+export async function saveWeeklyWorkoutDays(weeklyWorkoutDays: WeeklyWorkoutDays) {
+  if (!isWeeklyWorkoutDays(weeklyWorkoutDays)) {
+    throw new Error('Invalid weekly workout days')
+  }
+
+  const { supabase, userId } = await getAuthenticatedUserId()
+  const { data: existing, error: readError } = await supabase
+    .from('user_fitness_preferences')
+    .select('fitness_goal, experience_level, session_duration_minutes, preferred_days, height_unit, weight_unit')
+    .eq('user_id', userId)
+    .maybeSingle()
+
+  if (readError) throw readError
+
+  const { error } = await supabase
+    .from('user_fitness_preferences')
+    .upsert(
+      {
+        user_id: userId,
+        fitness_goal: existing?.fitness_goal ?? null,
+        experience_level: existing?.experience_level ?? null,
+        days_per_week: weeklyWorkoutDays,
         session_duration_minutes: existing?.session_duration_minutes ?? null,
         preferred_days: existing?.preferred_days ?? [],
         height_unit: existing?.height_unit ?? 'cm',
