@@ -64,12 +64,24 @@ export function useI18n() {
 
 export function LanguageSwitcher() {
   const { lang, setLang, t } = useI18n()
+
+  const optionClass = (option: Language) =>
+    `focus-ring flex min-h-touch min-w-touch items-center justify-center rounded-full px-3 font-semibold transition-colors duration-200 ${
+      lang === option
+        ? 'bg-gym-accent text-white shadow-sm'
+        : 'text-gym-muted hover:bg-gym-surface-2 hover:text-gym-text'
+    }`
+
   return (
-    <div className="fixed right-3 top-3 z-[60] flex rounded-full border border-gym-border bg-gym-surface/90 p-0.5 text-xs shadow backdrop-blur" aria-label={t('language')}>
+    <div
+      className="fixed top-3 right-[calc(env(safe-area-inset-right)+4.5rem)] z-40 flex rounded-full border border-gym-border bg-gym-surface/95 p-0.5 text-xs shadow-md backdrop-blur sm:right-20"
+      role="group"
+      aria-label={t('language')}
+    >
       <button
         type="button"
         onClick={() => setLang('en')}
-        className={`min-h-8 rounded-full px-3 font-semibold ${lang === 'en' ? 'bg-gym-accent text-white' : 'text-gym-muted'}`}
+        className={optionClass('en')}
         aria-pressed={lang === 'en'}
       >
         EN
@@ -77,7 +89,7 @@ export function LanguageSwitcher() {
       <button
         type="button"
         onClick={() => setLang('es')}
-        className={`min-h-8 rounded-full px-3 font-semibold ${lang === 'es' ? 'bg-gym-accent text-white' : 'text-gym-muted'}`}
+        className={optionClass('es')}
         aria-pressed={lang === 'es'}
       >
         ES
