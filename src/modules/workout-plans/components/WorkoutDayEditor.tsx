@@ -86,9 +86,9 @@ export function WorkoutDayEditor({ day, planId }: WorkoutDayEditorProps) {
 
       {pickerOpen && (
         <ExercisePicker
-          onSelect={({ exerciseId }) => {
+          onSelect={({ exerciseNameSnapshot }) => {
             addExercise({
-              exerciseId,
+              exerciseId: exerciseNameSnapshot,
               displayOrder: exercises.length,
               targetSets: null,
               targetReps: null,
