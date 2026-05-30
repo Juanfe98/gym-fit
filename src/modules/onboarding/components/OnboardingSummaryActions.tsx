@@ -18,7 +18,7 @@ export function OnboardingSummaryActions() {
     setError(null)
     try {
       await completeOnboarding()
-      router.push('/dashboard')
+      router.push('/')
       router.refresh()
     } catch (err) {
       const isValidationError =

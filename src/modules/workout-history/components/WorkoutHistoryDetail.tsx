@@ -1,3 +1,6 @@
+'use client'
+
+import { useI18n } from '@/i18n/client'
 import { formatSessionName } from '../utils/format-session-name'
 import { ExerciseSetGroup } from './ExerciseSetGroup'
 import type { WorkoutHistoryDetail as WorkoutHistoryDetailData } from '../types'
@@ -16,15 +19,16 @@ interface WorkoutHistoryDetailProps {
 }
 
 export function WorkoutHistoryDetail({ session }: WorkoutHistoryDetailProps) {
+  const { t, lang } = useI18n()
   const title = formatSessionName(session)
 
-  const startDate = new Intl.DateTimeFormat('en', {
+  const startDate = new Intl.DateTimeFormat(lang, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   }).format(new Date(session.startedAt))
 
-  const startTime = new Intl.DateTimeFormat('en', {
+  const startTime = new Intl.DateTimeFormat(lang, {
     hour: 'numeric',
     minute: '2-digit',
   }).format(new Date(session.startedAt))
@@ -52,7 +56,7 @@ export function WorkoutHistoryDetail({ session }: WorkoutHistoryDetailProps) {
       {session.sourcePlanName && (
         <div className="flex flex-col gap-0.5">
           <span className="text-[11px] font-semibold uppercase tracking-wide text-gym-muted">
-            From Plan
+            {t('historyDetailFromPlan')}
           </span>
           <span className="text-sm font-medium">
             {session.sourcePlanName}
@@ -63,22 +67,30 @@ export function WorkoutHistoryDetail({ session }: WorkoutHistoryDetailProps) {
 
       <div className="flex flex-wrap gap-x-6 gap-y-3">
         <div className="flex flex-col gap-0.5">
-          <span className="text-[11px] uppercase tracking-wide text-gym-muted">Duration</span>
+          <span className="text-[11px] uppercase tracking-wide text-gym-muted">
+            {t('historyDetailDuration')}
+          </span>
           <span className="text-sm font-semibold">{formatDuration(session.durationSeconds)}</span>
         </div>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[11px] uppercase tracking-wide text-gym-muted">Volume</span>
+          <span className="text-[11px] uppercase tracking-wide text-gym-muted">
+            {t('historyDetailVolume')}
+          </span>
           <span className="text-sm font-semibold">
             {session.totalVolume != null ? `${session.totalVolume} kg` : '—'}
           </span>
         </div>
         <div className="flex flex-col gap-0.5">
-          <span className="text-[11px] uppercase tracking-wide text-gym-muted">Sets</span>
+          <span className="text-[11px] uppercase tracking-wide text-gym-muted">
+            {t('historyDetailSets')}
+          </span>
           <span className="text-sm font-semibold">{totalSets}</span>
         </div>
         {session.prCount > 0 && (
           <div className="flex flex-col gap-0.5">
-            <span className="text-[11px] uppercase tracking-wide text-gym-muted">PRs</span>
+            <span className="text-[11px] uppercase tracking-wide text-gym-muted">
+              {t('historyDetailPRs')}
+            </span>
             <span className="text-sm font-semibold">{session.prCount}</span>
           </div>
         )}
@@ -86,7 +98,9 @@ export function WorkoutHistoryDetail({ session }: WorkoutHistoryDetailProps) {
 
       {prSets.length > 0 && (
         <div className="rounded-lg border border-yellow-500/30 bg-yellow-500/10 p-3">
-          <p className="mb-2 text-xs font-semibold text-yellow-400">Personal Records</p>
+          <p className="mb-2 text-xs font-semibold text-yellow-400">
+            {t('historyDetailPersonalRecords')}
+          </p>
           <ul className="flex flex-col gap-1">
             {prSets.map(({ exerciseName, set }) => (
               <li key={set.id} className="text-xs text-gym-muted">
@@ -108,7 +122,7 @@ export function WorkoutHistoryDetail({ session }: WorkoutHistoryDetailProps) {
       {session.notes && (
         <div className="flex flex-col gap-1">
           <span className="text-xs font-semibold uppercase tracking-wide text-gym-muted">
-            Notes
+            {t('historyDetailNotes')}
           </span>
           <p className="text-sm">{session.notes}</p>
         </div>

@@ -19,6 +19,17 @@ function mapDay(row: DayRow): WorkoutDay {
   }
 }
 
+export async function getDayById(dayId: string): Promise<WorkoutDay | null> {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('workout_days')
+    .select('*')
+    .eq('id', dayId)
+    .maybeSingle()
+  if (error) throw error
+  return data ? mapDay(data as DayRow) : null
+}
+
 export async function getDays(planId: string): Promise<WorkoutDay[]> {
   const supabase = createClient()
   const { data, error } = await supabase

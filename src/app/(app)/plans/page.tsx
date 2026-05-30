@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useQuery } from '@tanstack/react-query'
+import { ChevronLeft } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useI18n } from '@/i18n/client'
 import { PlanCard } from '@/modules/workout-plans/components/PlanCard'
@@ -34,7 +36,17 @@ export default function PlansPage() {
 
   return (
     <div className="min-h-screen bg-gym-bg pb-20">
-      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+      <div className="px-4 pt-4">
+        <Link
+          href="/plan"
+          aria-label="Back to plan overview"
+          className="focus-ring inline-flex items-center gap-1 text-xs font-semibold text-gym-muted transition-colors hover:text-gym-text"
+        >
+          <ChevronLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          {t('planOverviewTitle')}
+        </Link>
+      </div>
+      <div className="flex items-center justify-between px-4 pt-2 pb-2">
         <h1 className="text-lg font-semibold text-gym-text">{t('plansTitle')}</h1>
         <button
           onClick={() => router.push('/plans/new')}

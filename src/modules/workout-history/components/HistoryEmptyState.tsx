@@ -36,13 +36,14 @@ export function HistoryEmptyState({ variant, onClearFilter }: HistoryEmptyStateP
   return (
     <EmptyState
       Icon={History}
-      title={t('historyEmpty')}
+      title={t('historyEmptyTitle')}
+      message={t('historyEmptyMessage')}
       action={
         <Link
-          href="/workout"
+          href="/plans"
           className="glow-accent inline-flex min-h-[44px] items-center rounded-lg bg-gym-accent px-6 text-sm font-semibold text-white"
         >
-          {t('historyEmptyCtaStart')}
+          {t('historyEmptyCta')}
         </Link>
       }
     />

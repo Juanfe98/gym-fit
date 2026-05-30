@@ -9,7 +9,11 @@ export function HistoryHeader({ userId }: { userId: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <PageHeader title={t('historyTitle')} className="px-0 pt-0" />
+      <PageHeader
+        title={t('historyTitle')}
+        subtitle={t('historyDescription')}
+        className="px-0 pt-0"
+      />
       <HistorySummary userId={userId} />
     </div>
   )

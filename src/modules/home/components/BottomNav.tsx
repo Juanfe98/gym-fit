@@ -15,7 +15,7 @@ type NavTab = {
 const NAV_TABS: NavTab[] = [
   { href: '/', labelKey: 'navHome', Icon: Home },
   { href: '/workout', labelKey: 'navWorkout', Icon: Dumbbell },
-  { href: '/plans', labelKey: 'navPlans', Icon: ClipboardList },
+  { href: '/plan', labelKey: 'navPlans', Icon: ClipboardList },
   { href: '/exercises', labelKey: 'navExercises', Icon: BookOpen },
   { href: '/profile', labelKey: 'navProfile', Icon: User },
 ]
@@ -31,7 +31,10 @@ export function BottomNav() {
     >
       <div className="flex h-full">
         {NAV_TABS.map(({ href, labelKey, Icon }) => {
-          const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
+          const active =
+            href === '/'
+              ? pathname === '/'
+              : pathname === href || pathname.startsWith(`${href}/`)
           return (
             <Link
               key={href}

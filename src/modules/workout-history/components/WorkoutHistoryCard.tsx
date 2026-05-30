@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ChevronRight, Trophy } from 'lucide-react'
 import { formatDuration } from '@/lib/format'
+import { useI18n } from '@/i18n/client'
 import { useVolumeFormat } from '@/modules/workout-session/hooks/use-volume-format'
 import { formatSessionName } from '../utils/format-session-name'
 import type { WorkoutHistorySummary } from '../types'
@@ -12,22 +13,23 @@ interface WorkoutHistoryCardProps {
 }
 
 export function WorkoutHistoryCard({ session }: WorkoutHistoryCardProps) {
+  const { t, lang } = useI18n()
   const { unit, formatVolume } = useVolumeFormat()
   const title = formatSessionName(session)
-  const date = new Intl.DateTimeFormat('en', {
+  const date = new Intl.DateTimeFormat(lang, {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
   }).format(new Date(session.startedAt))
 
   const stats: { label: string; value: string }[] = [
-    { label: 'Time', value: formatDuration(session.durationSeconds) },
+    { label: t('historyCardTime'), value: formatDuration(session.durationSeconds) },
     {
-      label: 'Volume',
+      label: t('historyCardVolume'),
       value: session.totalVolume != null ? `${formatVolume(session.totalVolume)}${unit}` : '—',
     },
-    { label: 'Sets', value: String(session.totalSets) },
-    { label: 'Exercises', value: String(session.exerciseCount) },
+    { label: t('historyCardSets'), value: String(session.totalSets) },
+    { label: t('historyCardExercises'), value: String(session.exerciseCount) },
   ]
 
   return (

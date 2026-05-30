@@ -1,0 +1,7 @@
+export { DashboardHero } from './components/DashboardHero'
+export { TodayWorkoutCard } from './components/TodayWorkoutCard'
+export { WeeklyCalendarCard } from './components/WeeklyCalendarCard'
+export { ProgressSnapshotCard } from './components/ProgressSnapshotCard'
+export { CurrentSetupCard } from './components/CurrentSetupCard'
+export { RecentActivityCard } from './components/RecentActivityCard'
+export type { DashboardSetupData } from './types'

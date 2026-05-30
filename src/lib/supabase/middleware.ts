@@ -46,7 +46,7 @@ export async function updateSession(request: NextRequest) {
     // Completed/skipped users cannot re-enter onboarding
     if (isOnboardingDone && isOnboardingPath) {
       const url = request.nextUrl.clone()
-      url.pathname = '/dashboard'
+      url.pathname = '/'
       return NextResponse.redirect(url)
     }
 
