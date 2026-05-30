@@ -7,16 +7,17 @@ type OnboardingActionsProps = {
   canContinue: boolean
   isSaving: boolean
   onContinue: () => void
+  backHref?: string
 }
 
-export function OnboardingActions({ canContinue, isSaving, onContinue }: OnboardingActionsProps) {
+export function OnboardingActions({ canContinue, isSaving, onContinue, backHref = '/onboarding/welcome' }: OnboardingActionsProps) {
   const { t } = useI18n()
   const backDisabled = isSaving
 
   return (
     <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
       <Link
-        href="/onboarding/welcome"
+        href={backHref}
         aria-disabled={backDisabled}
         onClick={(event) => {
           if (backDisabled) event.preventDefault()

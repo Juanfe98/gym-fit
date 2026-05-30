@@ -50,10 +50,22 @@ export type FitnessGoalOption = {
 
 export type OnboardingState = {
   mainGoal?: MainGoal | null
+  weeklyWorkoutDays?: WeeklyWorkoutDays | null
 }
 
 const MAIN_GOAL_IDS = new Set<string>(ONBOARDING_GOAL_OPTIONS.map((option) => option.id))
 
 export function isMainGoal(value: unknown): value is MainGoal {
   return typeof value === 'string' && MAIN_GOAL_IDS.has(value)
+}
+
+export const WEEKLY_WORKOUT_DAYS_OPTIONS = [2, 3, 4, 5, 6] as const
+
+export type WeeklyWorkoutDays = (typeof WEEKLY_WORKOUT_DAYS_OPTIONS)[number]
+
+export function isWeeklyWorkoutDays(value: unknown): value is WeeklyWorkoutDays {
+  return (
+    typeof value === 'number' &&
+    (WEEKLY_WORKOUT_DAYS_OPTIONS as readonly number[]).includes(value)
+  )
 }
