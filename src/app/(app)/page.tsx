@@ -16,8 +16,11 @@ export default async function HomePage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  if (user?.user_metadata?.onboarding_status !== 'completed') {
-    redirect('/onboarding/goal')
+  const onboardingStatus = user?.user_metadata?.onboarding_status as string | undefined
+  const isOnboardingDone = onboardingStatus === 'completed' || onboardingStatus === 'skipped'
+
+  if (!isOnboardingDone) {
+    redirect(onboardingStatus ? '/onboarding/goal' : '/onboarding/welcome')
   }
 
   const userId = user!.id
