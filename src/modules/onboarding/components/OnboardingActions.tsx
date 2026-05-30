@@ -10,7 +10,12 @@ type OnboardingActionsProps = {
   backHref?: string
 }
 
-export function OnboardingActions({ canContinue, isSaving, onContinue, backHref = '/onboarding/welcome' }: OnboardingActionsProps) {
+export function OnboardingActions({
+  canContinue,
+  isSaving,
+  onContinue,
+  backHref = '/onboarding/welcome',
+}: OnboardingActionsProps) {
   const { t } = useI18n()
   const backDisabled = isSaving
 

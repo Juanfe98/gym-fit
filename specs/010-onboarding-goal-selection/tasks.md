@@ -38,14 +38,14 @@
 
 ## Phase 3: User Story 1 - Select a primary fitness goal (Priority: P1) 🎯 MVP
 
-**Goal**: User can visit `/onboarding/goal`, view Step 1 of 7, see all seven goal cards, select exactly one goal, and see Continue disabled until selection.
+**Goal**: User can visit `/onboarding/goal`, view Step 1 of 8, see all seven goal cards, select exactly one goal, and see Continue disabled until selection.
 
 **Independent Test**: Open `/onboarding/goal`, confirm required title/description/progress/options, select multiple cards, verify only the latest card is selected, and verify Continue enables only after a selection.
 
 ### Implementation for User Story 1
 
 - [x] T006 [P] [US1] Create premium dark onboarding layout shell in `src/modules/onboarding/components/OnboardingShell.tsx`
-- [x] T007 [P] [US1] Create Step 1 of 7 progress indicator in `src/modules/onboarding/components/OnboardingProgress.tsx`
+- [x] T007 [P] [US1] Create Step 1 of 8 progress indicator in `src/modules/onboarding/components/OnboardingProgress.tsx`
 - [x] T008 [P] [US1] Create accessible selectable goal card with `aria-pressed` support in `src/modules/onboarding/components/GoalOptionCard.tsx`
 - [x] T009 [P] [US1] Create Back and Continue action area component with disabled Continue support in `src/modules/onboarding/components/OnboardingActions.tsx`
 - [x] T010 [US1] Create responsive goal option grid using `ONBOARDING_GOAL_OPTIONS` in `src/modules/onboarding/components/GoalOptionGrid.tsx`
@@ -159,7 +159,7 @@
 ```bash
 # After foundational tasks, these can be implemented in parallel:
 Task: "Create premium dark onboarding layout shell in src/modules/onboarding/components/OnboardingShell.tsx"
-Task: "Create Step 1 of 7 progress indicator in src/modules/onboarding/components/OnboardingProgress.tsx"
+Task: "Create Step 1 of 8 progress indicator in src/modules/onboarding/components/OnboardingProgress.tsx"
 Task: "Create accessible selectable goal card with aria-pressed support in src/modules/onboarding/components/GoalOptionCard.tsx"
 Task: "Create Back and Continue action area component with disabled Continue support in src/modules/onboarding/components/OnboardingActions.tsx"
 ```

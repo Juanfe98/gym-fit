@@ -3,7 +3,7 @@
 **Feature Branch**: `010-onboarding-goal-selection`  
 **Created**: 2026-05-29  
 **Status**: Draft  
-**Input**: User description: "Create a goal selection onboarding page where the user selects one primary fitness goal. Route: /onboarding/goal. Goal options: Build muscle, Lose fat, Gain strength, Improve endurance, General fitness, Improve mobility, Maintain current shape. Requirements: premium dark fitness UI, progress Step 1 of 7, title \"What is your main fitness goal?\", description \"Choose the goal that best matches what you want to focus on first. You can update this later.\", options as modern selectable cards, single selection only, selected card has clear state, Continue disabled until selected, Continue saves mainGoal into onboarding state and navigates to /onboarding/experience, Back navigates to /onboarding/welcome, include loading/error states for save action, use strong TypeScript types, accessible buttons with aria-pressed, responsive desktop/tablet/mobile. Suggested components: OnboardingShell, OnboardingProgress, GoalOptionGrid, GoalOptionCard, OnboardingActions."
+**Input**: User description: "Create a goal selection onboarding page where the user selects one primary fitness goal. Route: /onboarding/goal. Goal options: Build muscle, Lose fat, Gain strength, Improve endurance, General fitness, Improve mobility, Maintain current shape. Requirements: premium dark fitness UI, progress Step 1 of 8, title \"What is your main fitness goal?\", description \"Choose the goal that best matches what you want to focus on first. You can update this later.\", options as modern selectable cards, single selection only, selected card has clear state, Continue disabled until selected, Continue saves mainGoal into onboarding state and navigates to /onboarding/experience, Back navigates to /onboarding/welcome, include loading/error states for save action, use strong TypeScript types, accessible buttons with aria-pressed, responsive desktop/tablet/mobile. Suggested components: OnboardingShell, OnboardingProgress, GoalOptionGrid, GoalOptionCard, OnboardingActions."
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -69,7 +69,7 @@ A user can understand and operate the goal-selection page on mobile, tablet, and
 1. **Given** a user views the page on a small phone-sized screen, **When** the goal cards and actions are displayed, **Then** content remains readable and usable without horizontal scrolling.
 2. **Given** a user views the page on a tablet or desktop-sized screen, **When** the goal cards are displayed, **Then** the grid adapts to use available space while preserving clear card separation and tap/click targets.
 3. **Given** a user navigates goal cards with assistive technology, **When** a card is selected or unselected, **Then** the card exposes its pressed/selected state in a way assistive technologies can announce.
-4. **Given** a user sees the page, **When** they review the progress indicator, **Then** it communicates "Step 1 of 7".
+4. **Given** a user sees the page, **When** they review the progress indicator, **Then** it communicates "Step 1 of 8".
 
 ### Edge Cases
 
@@ -86,7 +86,7 @@ A user can understand and operate the goal-selection page on mobile, tablet, and
 ### Functional Requirements
 
 - **FR-001**: System MUST provide the goal-selection onboarding page at `/onboarding/goal`.
-- **FR-002**: System MUST display onboarding progress as "Step 1 of 7".
+- **FR-002**: System MUST display onboarding progress as "Step 1 of 8".
 - **FR-003**: System MUST display the page title exactly as: "What is your main fitness goal?".
 - **FR-004**: System MUST display the description exactly as: "Choose the goal that best matches what you want to focus on first. You can update this later.".
 - **FR-005**: System MUST display the goal option "Build muscle".
@@ -117,7 +117,7 @@ A user can understand and operate the goal-selection page on mobile, tablet, and
 
 - **Fitness Goal Option**: Represents one selectable goal shown to the user. Key attributes include a stable goal identifier, display label, selected state, and accessible pressed state.
 - **Onboarding State**: Represents the user's in-progress setup data. For this feature, the relevant attribute is `mainGoal`, which stores the single selected primary fitness goal.
-- **Onboarding Step**: Represents the user's position in the setup flow. For this feature, goal selection is Step 1 of 7 and leads to the experience step.
+- **Onboarding Step**: Represents the user's position in the setup flow. For this feature, goal selection is Step 1 of 8 and leads to the experience step.
 
 ## Success Criteria *(mandatory)*
 

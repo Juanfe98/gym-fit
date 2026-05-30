@@ -17,7 +17,7 @@ export default async function OnboardingGoalPage() {
   return (
     <OnboardingShell>
       <section className="flex flex-col gap-8" aria-labelledby="onboarding-goal-title">
-        <OnboardingProgress currentStep={1} totalSteps={7} />
+        <OnboardingProgress currentStep={1} totalSteps={8} />
 
         <div className="flex max-w-3xl flex-col gap-4">
           <h1

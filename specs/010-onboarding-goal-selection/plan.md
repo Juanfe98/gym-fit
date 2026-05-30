@@ -5,7 +5,7 @@
 
 ## Summary
 
-Build the first onboarding data-entry step at `/onboarding/goal`. The page displays Step 1 of 7, asks the user for one primary fitness goal, renders seven accessible selectable cards, disables Continue until a goal is selected, saves the selected `mainGoal` into onboarding state, and routes to `/onboarding/experience`. Implementation uses the existing Next.js App Router, Tailwind token system, Supabase auth metadata for lightweight onboarding state, and no new dependencies.
+Build the first onboarding data-entry step at `/onboarding/goal`. The page displays Step 1 of 8, asks the user for one primary fitness goal, renders seven accessible selectable cards, disables Continue until a goal is selected, saves the selected `mainGoal` into onboarding state, and routes to `/onboarding/experience`. Implementation uses the existing Next.js App Router, Tailwind token system, Supabase auth metadata for lightweight onboarding state, and no new dependencies.
 
 ## Technical Context
 
@@ -64,7 +64,7 @@ src/
     onboarding/
       components/
         OnboardingShell.tsx              # NEW: shared premium dark onboarding layout
-        OnboardingProgress.tsx           # NEW: Step 1 of 7 indicator
+        OnboardingProgress.tsx           # NEW: Step 1 of 8 indicator
         GoalOptionGrid.tsx               # NEW: responsive option grid
         GoalOptionCard.tsx               # NEW: accessible selectable goal card with aria-pressed state
         OnboardingActions.tsx            # NEW: Back/Continue actions with pending/error UI; both blocked while saving

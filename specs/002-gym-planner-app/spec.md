@@ -66,7 +66,7 @@ A user wants to see if they are getting stronger over time. They view a chart of
 
 ### User Story 4 — Onboarding & Profile Setup (Priority: P1)
 
-A new user downloads the app, creates an account, and completes an onboarding flow that captures their fitness level, goals, and available equipment.
+A new user downloads the app, creates an account, and completes the canonical onboarding flow from `docs/core-application-flow.md`: welcome, goal, experience level, workout frequency, available workout time, equipment, optional body info, optional limitations/injuries, and summary.
 
 **Why this priority**: Without onboarding, the app cannot personalize experience or recommend plans. Required before any other flow is useful.
 
@@ -75,7 +75,7 @@ A new user downloads the app, creates an account, and completes an onboarding fl
 **Acceptance Scenarios**:
 
 1. **Given** a new user on the welcome screen, **When** they complete registration (email + password or social), **Then** an account is created and onboarding begins.
-2. **Given** an onboarding flow, **When** the user provides fitness level, primary goal, and available equipment, **Then** the profile is saved and used for plan recommendations.
+2. **Given** an onboarding flow, **When** the user provides primary goal, experience level, preferred workout frequency, available workout time, and available equipment, with optional body info and limitations, **Then** the profile is saved and used for plan recommendations.
 3. **Given** a returning user, **When** they open the app, **Then** they land directly on the home screen without seeing onboarding again.
 
 ---
@@ -119,7 +119,7 @@ A user sets a goal ("Squat 100kg by September") and can track progress toward it
 
 **Onboarding**
 - **FR-005**: System MUST guide new users through a fitness profile setup on first launch.
-- **FR-006**: System MUST capture fitness level, primary goal, and available equipment during onboarding.
+- **FR-006**: System MUST capture primary goal, experience level, preferred workout frequency, available workout time, and available equipment during onboarding, with optional body info and optional limitations/injuries before summary completion.
 
 **Workout Session Tracking**
 - **FR-007**: System MUST allow users to start, pause, resume, and end a workout session.
@@ -154,7 +154,7 @@ A user sets a goal ("Squat 100kg by September") and can track progress toward it
 
 ### Key Entities
 
-- **User**: Authenticated account. Has profile (fitness level, goal, equipment, units preference).
+- **User**: Authenticated account. Has profile (experience level, goal, workout frequency, available workout time, equipment, optional body info, optional limitations, units preference).
 - **Exercise**: Named movement with muscle group, equipment tags, and optional video/image. Can be system-defined or user-created.
 - **WorkoutPlan**: Ordered collection of sessions. Has name, schedule frequency, and difficulty level.
 - **PlanSession**: A single session within a plan. Has ordered list of exercises with prescribed sets, reps, and rest periods.

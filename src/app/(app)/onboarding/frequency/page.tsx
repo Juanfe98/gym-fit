@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { FrequencySelectionForm } from '@/modules/onboarding/components/FrequencySelectionForm'
 import { OnboardingProgress } from '@/modules/onboarding/components/OnboardingProgress'
 import { OnboardingShell } from '@/modules/onboarding/components/OnboardingShell'
-import { isWeeklyWorkoutDays } from '@/modules/onboarding/types'
+import { isWeeklyWorkoutDays, type WeeklyWorkoutDays } from '@/modules/onboarding/types'
 
 export default async function OnboardingFrequencyPage() {
   const supabase = await createClient()
@@ -11,14 +11,24 @@ export default async function OnboardingFrequencyPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  const initialDays = isWeeklyWorkoutDays(user?.user_metadata?.weeklyWorkoutDays)
-    ? user.user_metadata.weeklyWorkoutDays
-    : null
+  let initialDays: WeeklyWorkoutDays | null = null
+
+  if (user) {
+    const { data } = await supabase
+      .from('user_fitness_preferences')
+      .select('days_per_week')
+      .eq('user_id', user.id)
+      .maybeSingle()
+
+    if (isWeeklyWorkoutDays(data?.days_per_week)) {
+      initialDays = data.days_per_week
+    }
+  }
 
   return (
     <OnboardingShell>
       <section className="flex flex-col gap-8" aria-labelledby="onboarding-frequency-title">
-        <OnboardingProgress currentStep={3} totalSteps={7} />
+        <OnboardingProgress currentStep={3} totalSteps={8} />
 
         <div className="flex max-w-3xl flex-col gap-4">
           <div
