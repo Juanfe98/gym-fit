@@ -391,13 +391,17 @@ Collect initial user information to personalize the experience.
 
 ### Screens
 
+The canonical application flow is documented in [`docs/core-application-flow.md`](./core-application-flow.md).
+
 - Welcome
 - Fitness Goal
 - Experience Level
-- Workout Availability
-- Equipment Access
-- Body Information
-- Summary
+- Preferred Workout Frequency
+- Available Workout Time
+- Available Equipment
+- Optional Body Information
+- Optional Limitations / Injuries
+- Onboarding Summary
 
 ### Functional Requirements
 
@@ -405,8 +409,8 @@ The onboarding should collect:
 
 - Primary fitness goal
 - Experience level
-- Preferred training days
-- Time per workout
+- Preferred training days / workout frequency
+- Available workout time / time per workout
 - Equipment access
 - Height
 - Weight
@@ -436,6 +440,7 @@ Minimum required fields:
 - User can edit onboarding data later in profile.
 - User sees progress indicator during onboarding.
 - User lands on Home after completion.
+- Returning users who have completed onboarding land directly on Home Dashboard at app launch.
 
 ---
 

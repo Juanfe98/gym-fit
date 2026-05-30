@@ -74,6 +74,6 @@ Represents the user's position in the onboarding sequence.
 
 ### Validation Rules
 
-- Progress text MUST communicate Step 1 of 7.
+- Progress text MUST communicate Step 1 of 8.
 - Back action MUST route to `/onboarding/welcome`.
 - Continue action after successful save MUST route to `/onboarding/experience`.

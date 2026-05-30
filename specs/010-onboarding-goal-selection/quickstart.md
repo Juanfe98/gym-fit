@@ -25,7 +25,7 @@ If redirected to sign in, authenticate and return to the route.
 ### Page content
 
 1. Confirm the route is `/onboarding/goal`.
-2. Confirm progress reads `Step 1 of 7`.
+2. Confirm progress reads `Step 1 of 8`.
 3. Confirm title reads `What is your main fitness goal?`.
 4. Confirm description reads `Choose the goal that best matches what you want to focus on first. You can update this later.`.
 5. Confirm all seven goal options are visible.

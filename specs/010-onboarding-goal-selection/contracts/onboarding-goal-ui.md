@@ -13,7 +13,7 @@
 
 ## Required Visible Copy
 
-- Progress: `Step 1 of 7`
+- Progress: `Step 1 of 8`
 - Title: `What is your main fitness goal?`
 - Description: `Choose the goal that best matches what you want to focus on first. You can update this later.`
 - Primary action: `Continue`

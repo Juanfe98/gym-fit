@@ -48,12 +48,65 @@ export type FitnessGoalOption = {
   descriptionKey: OnboardingGoalCopyKey
 }
 
+export const ONBOARDING_EXPERIENCE_OPTIONS = [
+  {
+    id: 'beginner',
+    labelKey: 'onboardingExperienceBeginner',
+    descriptionKey: 'onboardingExperienceBeginnerDescription',
+    exampleKeys: [
+      'onboardingExperienceBeginnerExampleConsistency',
+      'onboardingExperienceBeginnerExampleTechnique',
+      'onboardingExperienceBeginnerExampleProgression',
+    ],
+  },
+  {
+    id: 'intermediate',
+    labelKey: 'onboardingExperienceIntermediate',
+    descriptionKey: 'onboardingExperienceIntermediateDescription',
+    exampleKeys: [
+      'onboardingExperienceIntermediateExampleConsistency',
+      'onboardingExperienceIntermediateExampleTechnique',
+      'onboardingExperienceIntermediateExampleProgression',
+    ],
+  },
+  {
+    id: 'advanced',
+    labelKey: 'onboardingExperienceAdvanced',
+    descriptionKey: 'onboardingExperienceAdvancedDescription',
+    exampleKeys: [
+      'onboardingExperienceAdvancedExampleConsistency',
+      'onboardingExperienceAdvancedExampleTechnique',
+      'onboardingExperienceAdvancedExampleProgression',
+    ],
+  },
+] as const
+
+export type ExperienceLevel = (typeof ONBOARDING_EXPERIENCE_OPTIONS)[number]['id']
+
+export type OnboardingExperienceCopyKey =
+  | (typeof ONBOARDING_EXPERIENCE_OPTIONS)[number]['labelKey']
+  | (typeof ONBOARDING_EXPERIENCE_OPTIONS)[number]['descriptionKey']
+  | (typeof ONBOARDING_EXPERIENCE_OPTIONS)[number]['exampleKeys'][number]
+
+export type ExperienceOption = {
+  id: ExperienceLevel
+  labelKey: OnboardingExperienceCopyKey
+  descriptionKey: OnboardingExperienceCopyKey
+  exampleKeys: readonly OnboardingExperienceCopyKey[]
+}
+
 export type OnboardingState = {
   mainGoal?: MainGoal | null
+  experienceLevel?: ExperienceLevel | null
 }
 
 const MAIN_GOAL_IDS = new Set<string>(ONBOARDING_GOAL_OPTIONS.map((option) => option.id))
+const EXPERIENCE_LEVEL_IDS = new Set<string>(ONBOARDING_EXPERIENCE_OPTIONS.map((option) => option.id))
 
 export function isMainGoal(value: unknown): value is MainGoal {
   return typeof value === 'string' && MAIN_GOAL_IDS.has(value)
+}
+
+export function isExperienceLevel(value: unknown): value is ExperienceLevel {
+  return typeof value === 'string' && EXPERIENCE_LEVEL_IDS.has(value)
 }
