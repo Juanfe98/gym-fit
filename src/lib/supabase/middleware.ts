@@ -27,12 +27,35 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  const { pathname } = request.nextUrl
+
   const PUBLIC_PATHS = ['/login', '/signup', '/forgot-password', '/reset-password', '/verify-email', '/session-expired', '/auth/callback']
-  const isPublic = PUBLIC_PATHS.some(p => request.nextUrl.pathname.startsWith(p))
+  const isPublic = PUBLIC_PATHS.some(p => pathname.startsWith(p))
+
   if (!user && !isPublic) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
     return NextResponse.redirect(url)
+  }
+
+  if (user) {
+    const onboardingStatus = user.user_metadata?.onboarding_status as string | undefined
+    const isOnboardingDone = onboardingStatus === 'completed' || onboardingStatus === 'skipped'
+    const isOnboardingPath = pathname.startsWith('/onboarding')
+
+    // Completed/skipped users cannot re-enter onboarding
+    if (isOnboardingDone && isOnboardingPath) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/dashboard'
+      return NextResponse.redirect(url)
+    }
+
+    // Fresh users (no status yet) must complete or skip onboarding before accessing the app
+    if (!onboardingStatus && !isOnboardingPath && !isPublic) {
+      const url = request.nextUrl.clone()
+      url.pathname = '/onboarding/welcome'
+      return NextResponse.redirect(url)
+    }
   }
 
   return supabaseResponse

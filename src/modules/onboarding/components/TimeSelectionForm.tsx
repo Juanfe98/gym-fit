@@ -3,34 +3,34 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useI18n } from '@/i18n/client'
-import { FrequencyOptionCard } from './FrequencyOptionCard'
+import { TimeOptionCard } from './TimeOptionCard'
 import { OnboardingActions } from './OnboardingActions'
-import { saveWeeklyWorkoutDays } from '../services/onboarding-state'
-import { WEEKLY_WORKOUT_DAYS_OPTIONS, type WeeklyWorkoutDays } from '../types'
+import { saveSessionDuration } from '../services/onboarding-state'
+import { WORKOUT_DURATION_OPTIONS, type WorkoutDurationMinutes } from '../types'
 
-type FrequencySelectionFormProps = {
-  initialDays: WeeklyWorkoutDays | null
+type TimeSelectionFormProps = {
+  initialMinutes: WorkoutDurationMinutes | null
 }
 
-export function FrequencySelectionForm({ initialDays }: FrequencySelectionFormProps) {
+export function TimeSelectionForm({ initialMinutes }: TimeSelectionFormProps) {
   const router = useRouter()
   const { t } = useI18n()
-  const [selectedDays, setSelectedDays] = useState<WeeklyWorkoutDays | null>(initialDays)
+  const [selectedMinutes, setSelectedMinutes] = useState<WorkoutDurationMinutes | null>(initialMinutes)
   const [isSaving, setIsSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function continueOnboarding() {
-    if (!selectedDays || isSaving) return
+    if (!selectedMinutes || isSaving) return
 
     setIsSaving(true)
     setError(null)
 
     try {
-      await saveWeeklyWorkoutDays(selectedDays)
-      router.push('/onboarding/time')
+      await saveSessionDuration(selectedMinutes)
+      router.push('/onboarding/equipment')
       router.refresh()
     } catch {
-      setError(t('onboardingFrequencySaveError'))
+      setError(t('onboardingTimeSaveError'))
       setIsSaving(false)
     }
   }
@@ -47,14 +47,14 @@ export function FrequencySelectionForm({ initialDays }: FrequencySelectionFormPr
       )}
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {WEEKLY_WORKOUT_DAYS_OPTIONS.map((days) => (
-          <FrequencyOptionCard
-            key={days}
-            days={days}
-            label={t('onboardingFrequencyDays', { count: days })}
-            selected={selectedDays === days}
-            onSelect={(d) => {
-              setSelectedDays(d)
+        {WORKOUT_DURATION_OPTIONS.map((minutes) => (
+          <TimeOptionCard
+            key={minutes}
+            minutes={minutes}
+            label={t('onboardingTimeMinutes', { count: minutes })}
+            selected={selectedMinutes === minutes}
+            onSelect={(m) => {
+              setSelectedMinutes(m)
               setError(null)
             }}
             disabled={isSaving}
@@ -63,10 +63,10 @@ export function FrequencySelectionForm({ initialDays }: FrequencySelectionFormPr
       </div>
 
       <OnboardingActions
-        canContinue={selectedDays !== null}
+        canContinue={selectedMinutes !== null}
         isSaving={isSaving}
         onContinue={continueOnboarding}
-        backHref="/onboarding/experience"
+        backHref="/onboarding/frequency"
       />
     </div>
   )
