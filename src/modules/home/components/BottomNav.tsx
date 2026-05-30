@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Home, Dumbbell, ClipboardList, User, BookOpen } from 'lucide-react'
 import { useI18n } from '@/i18n/client'
+import { FEATURE_FLAGS } from '@/config/feature-flags'
 import type { LucideIcon } from 'lucide-react'
 
 type NavTab = {
@@ -16,7 +17,9 @@ const NAV_TABS: NavTab[] = [
   { href: '/', labelKey: 'navHome', Icon: Home },
   { href: '/workout', labelKey: 'navWorkout', Icon: Dumbbell },
   { href: '/plan', labelKey: 'navPlans', Icon: ClipboardList },
-  { href: '/exercises', labelKey: 'navExercises', Icon: BookOpen },
+  ...(FEATURE_FLAGS.exerciseLibrary
+    ? [{ href: '/exercises', labelKey: 'navExercises', Icon: BookOpen } satisfies NavTab]
+    : []),
   { href: '/profile', labelKey: 'navProfile', Icon: User },
 ]
 
