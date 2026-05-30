@@ -13,7 +13,7 @@ export default async function OnboardingWelcomePage() {
   if (!user) redirect('/login')
 
   const status = user.user_metadata?.onboarding_status as string | undefined
-  if (status === 'completed' || status === 'skipped') redirect('/')
+  if (status === 'completed') redirect('/')
 
   return (
     <main className="min-h-dvh overflow-x-hidden bg-[radial-gradient(circle_at_top_right,color-mix(in_srgb,var(--color-gym-accent)_22%,transparent),transparent_28rem),linear-gradient(135deg,var(--color-gym-bg)_0%,var(--color-gym-surface)_48%,var(--color-gym-bg)_100%)] px-4 py-8 text-gym-text sm:px-6 lg:px-8">

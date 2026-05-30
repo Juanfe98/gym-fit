@@ -40,11 +40,10 @@ export async function updateSession(request: NextRequest) {
 
   if (user) {
     const onboardingStatus = user.user_metadata?.onboarding_status as string | undefined
-    const isOnboardingDone = onboardingStatus === 'completed' || onboardingStatus === 'skipped'
     const isOnboardingPath = pathname.startsWith('/onboarding')
 
-    // Completed/skipped users cannot re-enter onboarding
-    if (isOnboardingDone && isOnboardingPath) {
+    // Completed users cannot re-enter onboarding. Skipped users may return later to finish setup.
+    if (onboardingStatus === 'completed' && isOnboardingPath) {
       const url = request.nextUrl.clone()
       url.pathname = '/'
       return NextResponse.redirect(url)
