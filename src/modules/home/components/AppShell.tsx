@@ -25,7 +25,7 @@ export function AppShell({ user: _user, children }: AppShellProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <div className="flex min-h-screen flex-col">
-        <main className="flex-1 pb-16">{children}</main>
+        <main className="flex-1 pb-16 pt-14">{children}</main>
         <BottomNav />
       </div>
     </QueryClientProvider>
